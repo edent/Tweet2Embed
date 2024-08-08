@@ -32,7 +32,7 @@ else :
 #   Chrome's headless options
 chrome_options = Options()
 chrome_options.add_argument('--headless=new')
-chrome_options.add_argument('--window-size=1920,1080')
+chrome_options.add_argument('--window-size=1920,2160')
 
 #   Turn off everything
 chrome_options.add_argument("--no-sandbox")
@@ -46,7 +46,6 @@ chrome_options.add_argument("--log-level=3")
 chrome_options.add_argument("--enable-features=UseOzonePlatform")
 chrome_options.add_argument("--ozone-platform=wayland")
 
-
 #   Start Chrome
 driver = webdriver.Chrome(options=chrome_options)
 
@@ -56,9 +55,7 @@ driver.get(f"https://platform.twitter.com/embed/Tweet.html?hideCard=false&hideTh
 #   Zoom in to prevent fuzziness
 zoom_factor = 1.25
 zoom = str(zoom_factor * 100) +"%"
-
 driver.execute_script(f"document.body.style.zoom='{zoom}'")
-
 
 #   Wait for page to fully render
 time.sleep(5)
