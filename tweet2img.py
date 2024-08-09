@@ -162,7 +162,7 @@ with open(  os.path.join( output_directory, f"{tweet_id}.txt" ) , 'w', encoding=
 #   Generate HTML to be pasted
 
 #   Link
-tweet_url = "https://twitter.com/" + data["user"]["screen_name"] + "/status/" + data["id_str"]
+tweet_url = "https://x.com/" + data["user"]["screen_name"] + "/status/" + data["id_str"]
 
 #   Convert image to base64 data URl
 binary_img      = open(output_img, 'rb').read()
