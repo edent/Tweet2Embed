@@ -1,0 +1,5 @@
+Pillow==10.4.0
+pyperclip==1.9.0
+Requests==2.32.3
+selenium==4.23.1
+webdriver_manager==4.0.2
