@@ -110,7 +110,9 @@ img.save( output_img, 'webp', optimize=True, quality=60 )
 driver.quit()
 
 #   Generate Alt Text
-tweet_alt = ""
+tweet_alt  = ""
+ptweet_alt = ""
+qtweet_alt = ""
 
 #   Get the data
 json_url =  f"https://cdn.syndication.twimg.com/tweet-result?id={tweet_id}&lang=en&token=1"
@@ -119,14 +121,14 @@ data = response.json()
 
 #   Is this a thread?
 if ( "parent" in data and hide_thread == "false" ) :
-    tweet_text = data["parent"]["text"]
-    tweet_name = data["parent"]["user"]["name"] + " (@" + data["parent"]["user"]["screen_name"] + ")"
-    tweet_date = data["parent"]["created_at"]
+    ptweet_text = data["parent"]["text"]
+    ptweet_name = data["parent"]["user"]["name"] + " (@" + data["parent"]["user"]["screen_name"] + ")"
+    ptweet_date = data["parent"]["created_at"]
     if "mediaDetails" in data["parent"]:
         for media in data["parent"]["mediaDetails"] :
             if "ext_alt_text" in media :
-                tweet_text += " . Image: " + media["ext_alt_text"]
-    tweet_alt += f"{tweet_date}. {tweet_name}. {tweet_text}. Reply "
+                ptweet_text += " . Image: " + media["ext_alt_text"]
+    ptweet_alt += f"{ptweet_date}. {ptweet_name}. {ptweet_text}. Reply "
 
 #   Text of Tweet
 tweet_text = data["text"]
@@ -136,10 +138,22 @@ if "mediaDetails" in data:
     for media in data["mediaDetails"] :
         if "ext_alt_text" in media :
             tweet_text += " . Image: " + media["ext_alt_text"]
+tweet_alt += f"{tweet_date}. {tweet_name}. {tweet_text}."
+
+
+#   Is this a quote Tweet?
+if ( "quoted_tweet" in data and hide_thread == "false" ) :
+    qtweet_text = data["quoted_tweet"]["text"]
+    qtweet_name = data["quoted_tweet"]["user"]["name"] + " (@" + data["quoted_tweet"]["user"]["screen_name"] + ")"
+    qtweet_date = data["quoted_tweet"]["created_at"]
+    if "mediaDetails" in data["quoted_tweet"]:
+        for media in data["quoted_tweet"]["mediaDetails"] :
+            if "ext_alt_text" in media :
+                qtweet_text += " . Image: " + media["ext_alt_text"]
+    qtweet_alt += f" Quoting: {qtweet_date}. {qtweet_name}. {qtweet_text}."
 
 #   Stick it all together
-tweet_alt += f"{tweet_date}. {tweet_name}. {tweet_text}"
-tweet_alt = f"Screenshot from Twitter. {tweet_alt}".replace("\n", " ")
+tweet_alt = f"Screenshot from Twitter. {ptweet_alt}{tweet_alt}{qtweet_alt}".replace("\n", " ")
 
 #   Save as a text file
 with open(  os.path.join( output_directory, f"{tweet_id}.txt" ) , 'w', encoding="utf-8" ) as text_file:
