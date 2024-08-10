@@ -18,7 +18,10 @@ Usage:
 
 
 ## tweet2html
-* `python tweet2html.py 123` will get the Tweet with ID 123, create an embedded HTML and CSS representation, and copy it to the clipboard.
+* `python tweet2html.py 123` will get the Tweet with ID 123, create an embedded HTML and CSS representation, and copy it to the clipboard. An HTML file is also saved.
+* `--thread` to get a parent or quote tweet
+* `--css` if you want the CSS as well
+* `--prett` for pretty-printed HTML
 
 ##  Examples
 * `1432768058028875791` Video
@@ -31,5 +34,6 @@ Usage:
 
 * Fractional Scaling may produce slightly fuzzy images (Wayland related?)
 * On tweet2img, the alt text contains t.co URls rather than the expanded ones (could use entities?)
-* No Polls in the HTML (for now?)
+* Number of retweets not shown (is there a non-API way to get it?)
+* No Twitter Cards in the HTML (for now?)
 * Many other things (probably?)
