@@ -170,6 +170,8 @@ def tweet_to_html( tweet_data ) :
 	if thread_show :
 		if "parent" in tweet_data :
 			tweet_parent = tweet_to_html( tweet_data["parent"] )
+		if "quoted_tweet" in tweet_data :
+			tweet_quote = tweet_to_html( tweet_data["quoted_tweet"] )
 
 
 	#	Take the data from the API of a single Tweet (which might also be a quote or reply).
@@ -234,7 +236,7 @@ def tweet_to_html( tweet_data ) :
 			</a>
 			<img class="tweet-embed-logo" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
 		</header>
-		<section class="tweet-embed-text">{tweet_reply}{tweet_text}{tweet_media}</section>
+		<section class="tweet-embed-text">{tweet_reply}{tweet_text}{tweet_media}{tweet_quote}</section>
 		<hr class="tweet-embed-hr">
 		<footer class="tweet-embed-footer">
 			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-likes">❤️ {tweet_likes}</a>

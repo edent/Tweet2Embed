@@ -20,6 +20,12 @@ Usage:
 ## tweet2html
 * `python tweet2html.py 123` will get the Tweet with ID 123, create an embedded HTML and CSS representation, and copy it to the clipboard.
 
+##  Examples
+* `1432768058028875791` Video
+* `1095659600420966400` Reply - parent has image
+* `909106648928718848` Multiple images
+* `1560621791470448642` Quote Tweet
+
 ## Known bugs:
 
 * Fractional Scaling may produce slightly fuzzy images (Wayland related?)
