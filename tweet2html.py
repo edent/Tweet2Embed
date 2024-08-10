@@ -162,47 +162,85 @@ def get_media( mediaDetails) :
 			media_html += f"<a href='{media['media_url_https']}'><img class='tweet-embed-media' alt='{media_alt}' src='{media_img}'></a>"
 	return media_html
 
+def tweet_to_html( tweet_data ) :
+	#	Take the data from the API of a single Tweet (which might also be a quote or reply).
+	#	Create a semantic HTML representation
+	#   Tweet Information
+	tweet_id       = tweet_data["id_str"]
+	tweet_name     = tweet_data["user"]["name"]
+	tweet_user     = tweet_data["user"]["screen_name"]
+	tweet_avatar   = tweet_data["user"]["profile_image_url_https"]
+	tweet_text     = tweet_data["text"]
+	tweet_date     = tweet_data["created_at"] 
+	tweet_likes    = tweet_data["favorite_count"]
+	tweet_replies  = tweet_data["conversation_count"]
+	tweet_entities = tweet_data["entities"] 
+	tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
+
+	#	Get the datetime
+	tweet_time = parser.parse( tweet_date )
+	tweet_time = tweet_time.strftime('%H:%M - %a %d %B %Y')
+
+	#	Is this a reply?
+	if "in_reply_to_screen_name" in tweet_data :
+		tweet_reply_to   = tweet_data["in_reply_to_screen_name"]
+		tweet_reply_link = tweet_data["in_reply_to_status_id_str"]
+		tweet_reply = f'''
+	<small class="tweet-embed-reply"><a href="https://twitter.com/{tweet_reply_to}/status/{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+	'''
+	else :
+		tweet_reply = ""
+
+	#   Embed entities
+	tweet_text = tweet_entities_to_html( tweet_text, tweet_entities )
+
+	#	Add media
+	tweet_media = ""
+	if ( "mediaDetails" in data ) :
+		tweet_media = get_media( data["mediaDetails"])
+
+	#   Newlines to BR
+	tweet_text = tweet_text.replace("\n","<br>")
+
+	#   Convert avatar to embedded WebP
+	tweet_avatar = requests.get(tweet_avatar)
+	tweet_avatar = Image.open(io.BytesIO(tweet_avatar.content))
+	output_img = os.path.join( tempfile.gettempdir() , f"{tweet_id}.webp")
+	tweet_avatar.save( output_img, 'webp', optimize=True, quality=60 )
+	#   Convert image to base64 data URl
+	binary_img      = open(output_img, 'rb').read()
+	base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
+	tweet_avatar = f'data:image/webp;base64,{base64_utf8_str}'
+
+	#   HTML
+	tweet_html = f'''
+	<blockquote class="tweet-embed">
+		<header class="tweet-embed-header">
+			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user">
+				<img class="tweet-embed-avatar"	src="{tweet_avatar}" alt="">
+				<div class="tweet-embed-user-names">
+					<p class="tweet-embed-user-names-name">{tweet_name}</p>@{tweet_user}
+				</div>
+			</a>
+			<img class="tweet-embed-logo" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
+		</header>
+		<section class="tweet-embed-text">{tweet_reply}{tweet_text}{tweet_media}</section>
+		<hr class="tweet-embed-hr">
+		<footer class="tweet-embed-footer">
+			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-likes">❤️ {tweet_likes}</a>
+			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-likes">💬 {tweet_replies}</a>
+			<a href="{tweet_url}"><time datetime="{tweet_date}">{tweet_time}</time></a>
+		</footer>
+	</blockquote>
+	'''
+	return tweet_html
+
 #   Get the data from the Twitter embed API
 json_url =  f"https://cdn.syndication.twimg.com/tweet-result?id={tweet_id}&lang=en&token=1"
 response = requests.get(json_url)
 data = response.json()
 
-#   Tweet Information
-tweet_id       = data["id_str"]
-tweet_name     = data["user"]["name"]
-tweet_user     = data["user"]["screen_name"]
-tweet_avatar   = data["user"]["profile_image_url_https"]
-tweet_text     = data["text"]
-tweet_date     = data["created_at"] 
-tweet_likes    = data["favorite_count"]
-tweet_replies  = data["conversation_count"]
-tweet_entities = data["entities"] 
-tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
-
-#	Get the datetime
-tweet_time = parser.parse( tweet_date )
-tweet_time = tweet_time.strftime('%H:%M - %a %d %B %Y')
-
-#   Embed entities
-tweet_text = tweet_entities_to_html( tweet_text, tweet_entities )
-
-#	Add media
-tweet_media = ""
-if ( "mediaDetails" in data ) :
-	tweet_media = get_media( data["mediaDetails"])
-
-#   Newlines to BR
-tweet_text = tweet_text.replace("\n","<br>")
-
-#   Convert avatar to embedded WebP
-tweet_avatar = requests.get(tweet_avatar)
-tweet_avatar = Image.open(io.BytesIO(tweet_avatar.content))
-output_img = os.path.join( tempfile.gettempdir() , f"{tweet_id}.webp")
-tweet_avatar.save( output_img, 'webp', optimize=True, quality=60 )
-#   Convert image to base64 data URl
-binary_img      = open(output_img, 'rb').read()
-base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
-tweet_avatar = f'data:image/webp;base64,{base64_utf8_str}'
+tweet_html = tweet_to_html(data)
 
 #   Generate HTML to be pasted
 
@@ -295,28 +333,11 @@ blockquote.tweet-embed {
 	border-radius:1em;
 	max-width:100%;
 }
+.tweet-embed-reply{
+	font-size:.75em;
+	display:block;
+}
 </style>
-'''
-#   HTML
-tweet_html = f'''
-<blockquote class="tweet-embed">
-	<header class="tweet-embed-header">
-		<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user">
-			<img class="tweet-embed-avatar"	src="{tweet_avatar}" alt="">
-			<div class="tweet-embed-user-names">
-				<p class="tweet-embed-user-names-name">{tweet_name}</p>@{tweet_user}
-			</div>
-		</a>
-		<img class="tweet-embed-logo" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
-	</header>
-	<section class="tweet-embed-text">{tweet_text}{tweet_media}</section>
-	<hr class="tweet-embed-hr">
-	<footer class="tweet-embed-footer">
-		<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-likes">❤️ {tweet_likes}</a>
-		<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-likes">💬 {tweet_replies}</a>
-		<a href="{tweet_url}"><time datetime="{tweet_date}">{tweet_time}</time></a>
-	</footer>
-</blockquote>
 '''
 
 #	Add the CSS to the output if requsted
@@ -332,8 +353,7 @@ if not pretty_print :
 pyperclip.copy( tweet_html )
 
 #   Print to say we've finished
-print(tweet_text)
-print( f"Copied {tweet_url}" )
+print( f"Copied {tweet_id}" )
 
 #	Save HTML
 #   Save directory
