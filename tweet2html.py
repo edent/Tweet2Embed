@@ -91,14 +91,14 @@ tweet_css = '''
 .tweet-embed::before {
 	all: unset;
 }
-blockquote:not(.tiktok-embed) {
+blockquote:not(*) {
 	all: unset;
 }
 .tweet-embed a {
 	cursor: pointer;
 }
 blockquote.tweet-embed {
-	box-sizing: border-box !important;
+	box-sizing: border-box;
 	border: .5px solid;
 	width: 550px;
 	max-width: 100%;
