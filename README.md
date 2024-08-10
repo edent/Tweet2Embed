@@ -25,6 +25,7 @@ Usage:
 * `1095659600420966400` Reply - parent has image
 * `909106648928718848` Multiple images
 * `1560621791470448642` Quote Tweet
+* `670060095972245504` Poll
 
 ## Known bugs:
 

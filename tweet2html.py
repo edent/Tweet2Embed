@@ -162,6 +162,64 @@ def get_media( mediaDetails) :
 			media_html += f"<a href='{media['media_url_https']}'><img class='tweet-embed-media' alt='{media_alt}' src='{media_img}'></a>"
 	return media_html
 
+def get_card_html( card_data ) :
+	poll_html = ""
+	#	As per https://github.com/igorbrigadir/twitter-advanced-search
+	card_name = card_data["name"] 
+	if card_name == "poll2choice_text_only" or card_name == "poll3choice_text_only" or card_name == "poll4choice_text_only" :
+		#	Default values
+		poll_1_label = ""
+		poll_2_label = ""
+		poll_3_label = ""
+		poll_4_label = ""
+		poll_1_count = 0
+		poll_2_count = 0
+		poll_3_count = 0
+		poll_4_count = 0
+
+		#	Get labels and counts
+		if "choice1_label" in card_data["binding_values"] :
+			poll_1_label =        card_data["binding_values"]["choice1_label"]["string_value"]
+			poll_1_count = (int) (card_data["binding_values"]["choice1_count"]["string_value"])
+		if "choice2_label" in card_data["binding_values"] :
+			poll_2_label =        card_data["binding_values"]["choice2_label"]["string_value"]
+			poll_2_count = (int) (card_data["binding_values"]["choice2_count"]["string_value"])
+		if "choice3_label" in card_data["binding_values"] :
+			poll_3_label =        card_data["binding_values"]["choice3_label"]["string_value"]
+			poll_3_count = (int) (card_data["binding_values"]["choice3_count"]["string_value"])
+		if "choice4_label" in card_data["binding_values"] :
+			poll_4_label =        card_data["binding_values"]["choice4_label"]["string_value"]
+			poll_4_count = (int) (card_data["binding_values"]["choice4_count"]["string_value"])
+
+		poll_total = poll_1_count + poll_2_count + poll_3_count + poll_4_count
+		poll_1_percent = '{0:.1f}'.format( (poll_1_count / poll_total) * 100 )
+		poll_2_percent = '{0:.1f}'.format( (poll_2_count / poll_total) * 100 )
+		poll_3_percent = '{0:.1f}'.format( (poll_3_count / poll_total) * 100 )
+		poll_4_percent = '{0:.1f}'.format( (poll_4_count / poll_total) * 100 )
+
+		if poll_1_label != "" :
+			poll_html += f'''
+				<hr class="tweet-embed-hr">
+				<label for="poll_1_count">{poll_1_label}: ({poll_1_count})</label><br>
+				<meter class="tweet-embed-meter" id="poll_1_count" min="0" max="100" low="33" high="66" value="{poll_1_percent}">{poll_1_count}</meter><br>
+			'''
+		if poll_2_label != "" :
+			poll_html += f'''
+				<label for="poll_2_count">{poll_2_label}: ({poll_2_count})</label><br>
+				<meter class="tweet-embed-meter" id="poll_2_count" min="0" max="100" low="33" high="66" value="{poll_2_percent}">{poll_2_count}</meter><br>
+			'''
+		if poll_3_label != "" :
+			poll_html += f'''
+				<label for="poll_3_count">{poll_3_label}: ({poll_3_count})</label><br>
+				<meter class="tweet-embed-meter" id="poll_3_count" min="0" max="100" low="33" high="66" value="{poll_3_percent}">{poll_3_count}</meter><br>
+			'''
+		if poll_4_label != "" :
+			poll_html += f'''
+				<label for="poll_4_count">{poll_4_label}: ({poll_4_count})</label><br>
+				<meter class="tweet-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
+			'''
+	return poll_html
+
 def tweet_to_html( tweet_data ) :
 
 	#	Show the thread / quote?
@@ -210,6 +268,11 @@ def tweet_to_html( tweet_data ) :
 	if ( "mediaDetails" in tweet_data ) :
 		tweet_media = get_media( tweet_data["mediaDetails"] )
 
+	#	Add card
+	tweet_card = ""
+	if "card" in tweet_data :
+		tweet_card = get_card_html( tweet_data["card"] )
+
 	#   Newlines to BR
 	tweet_text = tweet_text.replace("\n","<br>")
 
@@ -236,7 +299,7 @@ def tweet_to_html( tweet_data ) :
 			</a>
 			<img class="tweet-embed-logo" alt="" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
 		</header>
-		<section class="tweet-embed-text">{tweet_reply}{tweet_text}{tweet_media}{tweet_quote}</section>
+		<section class="tweet-embed-text">{tweet_reply}{tweet_text}{tweet_media}{tweet_card}{tweet_quote}</section>
 		<hr class="tweet-embed-hr">
 		<footer class="tweet-embed-footer">
 			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes}</a>
@@ -349,6 +412,10 @@ blockquote.tweet-embed {
 .tweet-embed-reply{
 	font-size:.75em;
 	display:block;
+}
+.tweet-embed-meter{
+	width: 100%;
+	background: #0005;
 }
 </style>
 '''
