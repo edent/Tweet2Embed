@@ -23,9 +23,22 @@ arguments = argparse.ArgumentParser(
 	description='Convert a Tweet ID to semantic HTML')
 arguments.add_argument('id',       type=int,            help='ID of the Tweet (integer)')
 arguments.add_argument('--thread', action='store_true', help='Show the thread (default false)', required=False)
+arguments.add_argument('--css',    action='store_true', help='Copy the CSS (default false)',    required=False)
+
 args = arguments.parse_args()
 tweet_id = args.id
 thread = args.thread
+css = args.css
+
+if ( True == thread ):
+	hide_thread = "false"
+else :
+	hide_thread = "true"
+
+if ( True == css ):
+	css_show = True
+else :
+	css_show = False
 
 #   Save directory
 output_directory = "output"
@@ -181,14 +194,15 @@ tweet_html = f'''
 </blockquote>
 '''
 
-tweet_output = tweet_css + tweet_html
+if css_show :
+	tweet_html = tweet_css + tweet_html
 
 #   Compact the html
-tweet_output = tweet_output.replace("\n", "")
-tweet_output = tweet_output.replace("\t", "")
+tweet_html = tweet_html.replace("\n", "")
+tweet_html = tweet_html.replace("\t", "")
 
 #   Copy to clipboard
-pyperclip.copy( tweet_output )
+pyperclip.copy( tweet_html )
 
 #   Print to say we've finished
 print( f"Copied {tweet_url}" )
