@@ -24,5 +24,5 @@ Usage:
 
 * Fractional Scaling may produce slightly fuzzy images (Wayland related?)
 * Alt text contains t.co URls rather than the expanded ones (could use entities?)
-* No images, videos, or polls in the HTML (for now?)
+* No Polls in the HTML (for now?)
 * Many other thing (probably?)
