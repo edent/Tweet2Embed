@@ -29,6 +29,6 @@ Usage:
 ## Known bugs:
 
 * Fractional Scaling may produce slightly fuzzy images (Wayland related?)
-* Alt text contains t.co URls rather than the expanded ones (could use entities?)
+* On tweet2img, the alt text contains t.co URls rather than the expanded ones (could use entities?)
 * No Polls in the HTML (for now?)
-* Many other thing (probably?)
+* Many other things (probably?)

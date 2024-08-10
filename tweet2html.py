@@ -239,8 +239,8 @@ def tweet_to_html( tweet_data ) :
 		<section class="tweet-embed-text">{tweet_reply}{tweet_text}{tweet_media}{tweet_quote}</section>
 		<hr class="tweet-embed-hr">
 		<footer class="tweet-embed-footer">
-			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-likes">❤️ {tweet_likes}</a>
-			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-likes">💬 {tweet_replies}</a>
+			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes}</a>
+			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-meta">💬 {tweet_replies}</a>
 			<a href="{tweet_url}"><time datetime="{tweet_date}">{tweet_time}</time></a>
 		</footer>
 	</blockquote>
@@ -331,8 +331,9 @@ blockquote.tweet-embed {
 	border: .1px solid;
 	margin: .5em 0 .5em 0;
 }
-.tweet-embed-likes {
-	margin: 0;
+.tweet-embed-meta {
+	text-decoration: none !important;
+	color: unset !important;
 }
 .tweet-embed-reply {
 	display: block;
