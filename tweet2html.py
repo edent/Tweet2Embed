@@ -148,7 +148,7 @@ def get_media( mediaDetails) :
 		#	Find alt text
 		media_alt = ""
 		if "ext_alt_text" in media :
-			media_alt = media["ext_alt_text"]
+			media_alt = html.escape( media["ext_alt_text"] )
 	
 		#	Is this a video or an image?
 		if "video_info" in media :
@@ -163,6 +163,15 @@ def get_media( mediaDetails) :
 	return media_html
 
 def tweet_to_html( tweet_data ) :
+
+	#	Show the thread / quote?
+	tweet_parent = ""
+	tweet_quote  = ""
+	if thread_show :
+		if "parent" in tweet_data :
+			tweet_parent = tweet_to_html( tweet_data["parent"] )
+
+
 	#	Take the data from the API of a single Tweet (which might also be a quote or reply).
 	#	Create a semantic HTML representation
 	#   Tweet Information
@@ -172,8 +181,8 @@ def tweet_to_html( tweet_data ) :
 	tweet_avatar   = tweet_data["user"]["profile_image_url_https"]
 	tweet_text     = tweet_data["text"]
 	tweet_date     = tweet_data["created_at"] 
-	tweet_likes    = tweet_data["favorite_count"]
-	tweet_replies  = tweet_data["conversation_count"]
+	tweet_likes    = tweet_data.get("favorite_count", "")	#	Might not exist
+	tweet_replies  = tweet_data.get("conversation_count", "")#	Might not exist
 	tweet_entities = tweet_data["entities"] 
 	tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
 
@@ -196,8 +205,8 @@ def tweet_to_html( tweet_data ) :
 
 	#	Add media
 	tweet_media = ""
-	if ( "mediaDetails" in data ) :
-		tweet_media = get_media( data["mediaDetails"])
+	if ( "mediaDetails" in tweet_data ) :
+		tweet_media = get_media( tweet_data["mediaDetails"] )
 
 	#   Newlines to BR
 	tweet_text = tweet_text.replace("\n","<br>")
@@ -215,6 +224,7 @@ def tweet_to_html( tweet_data ) :
 	#   HTML
 	tweet_html = f'''
 	<blockquote class="tweet-embed">
+		{tweet_parent}
 		<header class="tweet-embed-header">
 			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user">
 				<img class="tweet-embed-avatar"	src="{tweet_avatar}" alt="">
