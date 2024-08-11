@@ -232,19 +232,29 @@ def get_card_html( card_data ) :
 
 	#	Photo Card
 	if "summary_large_image" == card_name :
-		card_vanity      = ""
-		card_title       = ""
-		card_description = ""
-		card_thumbnail   = ""
-		card_url         = ""
-		card_html        = ""
+		card_vanity           = ""
+		card_vanity_html      = ""
+		card_title            = ""
+		card_title_html       = ""
+		card_description      = ""
+		card_description_html = ""
+		card_thumbnail        = ""
+		card_thumbnail_html   = ""
+		card_thumbnail_alt    = ""
+		card_url              = ""
+		card_html             = ""
 
 		if "vanity_url" in card_data["binding_values"] :
 			card_vanity = card_data["binding_values"]["vanity_url"]["string_value"]
+			card_vanity_html = f"<p>{card_vanity}</p>"
 		if "title" in card_data["binding_values"] :
 			card_title = card_data["binding_values"]["title"]["string_value"]
+			card_title_html = f"<p>{card_title}</p>"
 		if "description" in card_data["binding_values"] :
 			card_description = card_data["binding_values"]["description"]["string_value"]
+			card_description_html = f"<p>{card_description}</p>"
+		if "summary_photo_image_alt_text" in card_data["binding_values"] :
+			card_thumbnail_alt = card_data["binding_values"]["summary_photo_image_alt_text"]["string_value"]
 		if "thumbnail_image" in card_data["binding_values"] :
 			card_thumbnail = card_data["binding_values"]["thumbnail_image"]["image_value"]["url"]
 			#   Convert  media to embedded WebP
@@ -257,16 +267,19 @@ def get_card_html( card_data ) :
 			binary_img      = open(output_img, 'rb').read()
 			base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
 			card_thumbnail = f'data:image/webp;base64,{base64_utf8_str}'
+			card_thumbnail_html = f'''
+				<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
+				'''
 		if "url" in card_data :
 			card_url = card_data["url"]
 
 		card_html += f'''
 			<br><br>
 			<a href="{card_url}" class="tweet-embed-card">
-				<img src="{card_thumbnail}" alt="" class="tweet-embed-media">
-				<p>{card_vanity}</p>
-				<p>{card_title}</p>
-				<p>{card_description}</p>
+				{card_thumbnail_html}
+				{card_vanity_html}
+				{card_title_html}
+				{card_description_html}
 			</a>
 		'''
 		return card_html
