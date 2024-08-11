@@ -247,14 +247,18 @@ def get_card_html( card_data ) :
 		if "vanity_url" in card_data["binding_values"] :
 			card_vanity = card_data["binding_values"]["vanity_url"]["string_value"]
 			card_vanity_html = f"<p>{card_vanity}</p>"
+		
 		if "title" in card_data["binding_values"] :
 			card_title = card_data["binding_values"]["title"]["string_value"]
 			card_title_html = f"<p>{card_title}</p>"
+		
 		if "description" in card_data["binding_values"] :
 			card_description = card_data["binding_values"]["description"]["string_value"]
 			card_description_html = f"<p>{card_description}</p>"
+		
 		if "summary_photo_image_alt_text" in card_data["binding_values"] :
 			card_thumbnail_alt = card_data["binding_values"]["summary_photo_image_alt_text"]["string_value"]
+		
 		if "thumbnail_image" in card_data["binding_values"] :
 			card_thumbnail = card_data["binding_values"]["thumbnail_image"]["image_value"]["url"]
 			#   Convert  media to embedded WebP
@@ -270,6 +274,7 @@ def get_card_html( card_data ) :
 			card_thumbnail_html = f'''
 				<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
 				'''
+		
 		if "url" in card_data :
 			card_url = card_data["url"]
 
