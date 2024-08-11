@@ -34,6 +34,5 @@ Usage:
 
 * Fractional Scaling may produce slightly fuzzy images (Wayland related?)
 * On tweet2img, the alt text contains t.co URls rather than the expanded ones (could use entities?)
-* Number of retweets not shown (is there a non-API way to get it?)
 * No Twitter Cards in the HTML (for now?)
 * Many other things (probably?)

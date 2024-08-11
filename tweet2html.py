@@ -248,6 +248,7 @@ def tweet_to_html( tweet_data ) :
 	tweet_lang     = tweet_data["lang"]
 	tweet_likes    = (int)(tweet_data.get("favorite_count",     0))#	Might not exist
 	tweet_replies  = (int)(tweet_data.get("conversation_count", 0))#	Might not exist
+	tweet_retweets = (int)(tweet_data.get("retweet_count",      0))#	Might not exist
 	tweet_entities = tweet_data["entities"] 
 	tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
 
@@ -315,6 +316,7 @@ def tweet_to_html( tweet_data ) :
 		<footer class="tweet-embed-footer">
 			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes:n}</a>
 			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-meta">💬 {tweet_replies:n}</a>
+			<a href="{tweet_url}" aria-label="{tweet_retweets} retweets" class="tweet-embed-meta">♻️ {tweet_retweets:n}</a>			
 			<a href="{tweet_url}"><time datetime="{tweet_date}">{tweet_time}</time></a>
 		</footer>
 	</blockquote>
