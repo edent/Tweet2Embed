@@ -349,95 +349,96 @@ tweet_html = tweet_to_html(data)
 #	CSS
 tweet_css = '''
 <style>
-.tweet-embed {
-	all: unset;
-	display: block;
+.tweet-embed{
+	all:unset;
+	display:block;
 }
 .tweet-embed * {
-	all: unset;
-	display: revert;
+	all:unset;
+	displayrevert;
 }
-.tweet-embed::after {
-	all: unset;
+.tweet-embed::after{
+	all:unset;
 }
-.tweet-embed::before {
-	all: unset;
+.tweet-embed::before{
+	all:unset;
 }
-blockquote:not(*) {
-	all: unset;
+blockquote:not(*){
+	all:unset;
 }
-.tweet-embed a {
-	cursor: pointer;
+.tweet-embed a{
+	cursor:pointer;
 }
-blockquote.tweet-embed {
-	box-sizing: border-box;
-	border: .5px solid;
-	width: 550px;
-	max-width: 100%;
-	font-family: sans-serif;
-	margin: 0;
-	margin-bottom: .5em;
-	padding: 1em;
-	border-radius: 1em;
-	background-color: white;
-	color: black;
-	display: block;
+blockquote.tweet-embed{
+	box-sizing:border-box;
+	border:.5px solid;
+	width:550px;
+	max-width:100%;
+	font-family:sans-serif;
+	margin:0;
+	margin-bottom:.5em;
+	padding:1em;
+	border-radius:1em;
+	background-color:#FFF;
+	color:#000;
+	display:block;
 }
-.tweet-embed-header {
-	display: flex;
-	justify-content: space-between;
+.tweet-embed-header{
+	display:flex;
+	justify-content:space-between;
 }
-.tweet-embed-user {
-	display: flex;
-	position: relative;
-	align-items: center;
-	text-decoration: none;
-	color: inherit;
+.tweet-embed-user{
+	display:flex;
+	position:relative;
+	align-items:center;
+	text-decoration:none;
+	color:inherit;
 }
-.tweet-embed-avatar {
-	width: 3em;
-	height: 3em;
-	margin-right: .5em;
+.tweet-embed-avatar{
+	width:3em;
+	height:3em;
+	margin-right:.5em;
 }
-.tweet-embed-avatar-circle {
-	border-radius: 50%;
+.tweet-embed-avatar-circle{
+	border-radius:50%;
 }
-.tweet-embed-avatar-square {
-	border-radius: 5%;
+.tweet-embed-avatar-square{
+	border-radius:5%;
 }
-.tweet-embed-user-names-name {
-	display: flex;
-	align-items: center;
-	font-weight: bold;
-	margin: 0;
+.tweet-embed-user-names-name{
+	display:flex;
+	align-items:center;
+	font-weight:bold;
+	margin:0;
 }
-.tweet-embed-text {
-	margin-top: .5em;
+.tweet-embed-text{
+	margin-top:.5em;
 }
-.tweet-embed-footer {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+.tweet-embed-footer{
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
 }
-.tweet-embed-logo {
-	width: 3em;
+.tweet-embed-logo{
+	width:3em;
 }
-.tweet-embed-hr {
-	border: .1px solid;
-	margin: .5em 0 .5em 0;
+.tweet-embed-hr{
+	border:.1px solid;
+	margin:.5em 0 .5em 0;
+	display:block;
 }
-.tweet-embed-meta {
-	text-decoration: none !important;
-	color: unset !important;
+.tweet-embed-meta{
+	text-decoration:none !important;
+	color:unset !important;
 }
-.tweet-embed-reply {
-	display: block;
+.tweet-embed-reply{
+	display:block;
 }
-.tweet-embed-text a, .tweet-embed-footer time {
-	color: blue;
-	text-decoration: underline;
+.tweet-embed-text a, .tweet-embed-footer time{
+	color:blue;
+	text-decoration:underline;
 }
-.tweet-embed-media, .tweet-embed-video {
+.tweet-embed-media, .tweet-embed-video{
 	border-radius:1em;
 	max-width:100%;
 }
@@ -446,8 +447,8 @@ blockquote.tweet-embed {
 	display:block;
 }
 .tweet-embed-meter{
-	width: 100%;
-	background: #0005;
+	width:100%;
+	background:#0005;
 }
 </style>
 '''
