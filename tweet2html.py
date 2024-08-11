@@ -313,7 +313,7 @@ def tweet_to_html( tweet_data ) :
 	tweet_name     = tweet_data["user"]["name"]
 	tweet_user     = tweet_data["user"]["screen_name"]
 	tweet_avatar   = tweet_data["user"]["profile_image_url_https"]
-	tweet_shape    = tweet_data["user"]["profile_image_shape"]
+	tweet_shape    = tweet_data["user"].get("profile_image_shape", "Square")#	Some users don't have this
 	tweet_text     = tweet_data["text"]
 	tweet_date     = tweet_data["created_at"] 
 	tweet_lang     = tweet_data["lang"]
