@@ -245,8 +245,8 @@ def tweet_to_html( tweet_data ) :
 	tweet_avatar   = tweet_data["user"]["profile_image_url_https"]
 	tweet_text     = tweet_data["text"]
 	tweet_date     = tweet_data["created_at"] 
-	tweet_likes    = tweet_data.get("favorite_count", "")	#	Might not exist
-	tweet_replies  = tweet_data.get("conversation_count", "")#	Might not exist
+	tweet_likes    = (int)(tweet_data.get("favorite_count",     0))#	Might not exist
+	tweet_replies  = (int)(tweet_data.get("conversation_count", 0))#	Might not exist
 	tweet_entities = tweet_data["entities"] 
 	tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
 
@@ -312,8 +312,8 @@ def tweet_to_html( tweet_data ) :
 		</section>
 		<hr class="tweet-embed-hr">
 		<footer class="tweet-embed-footer">
-			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes}</a>
-			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-meta">💬 {tweet_replies}</a>
+			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes:n}</a>
+			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-meta">💬 {tweet_replies:n}</a>
 			<a href="{tweet_url}"><time datetime="{tweet_date}">{tweet_time}</time></a>
 		</footer>
 	</blockquote>
