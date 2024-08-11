@@ -14,6 +14,7 @@ import requests
 import pyperclip
 import base64
 import html
+import random
 
 #	Date manipulation
 from datetime import datetime
@@ -337,9 +338,22 @@ def tweet_to_html( tweet_data ) :
 	return tweet_html
 
 #   Get the data from the Twitter embed API
-json_url =  f"https://cdn.syndication.twimg.com/tweet-result?id={tweet_id}&lang=en&token=1"
-response = requests.get(json_url)
-data = response.json()
+for _ in range(5):
+	#	Lazy retry strategy
+	try :
+		token = random.randint(1,10000)
+		json_url =  f"https://cdn.syndication.twimg.com/tweet-result?id={tweet_id}&lang=en&token={token}"
+		response = requests.get(json_url)
+		data = response.json()
+		break
+	except :
+		print( "Retrying…" )
+		continue
+
+#	If Tweet was deleted, exit.
+if "TweetTombstone" == data["__typename"] :
+	print("This Post was deleted by the Post author.")
+	raise SystemExit
 
 #	Turn the Tweet into HTML
 tweet_html = tweet_to_html(data)
@@ -355,7 +369,7 @@ tweet_css = '''
 }
 .tweet-embed * {
 	all:unset;
-	displayrevert;
+	display:revert;
 }
 .tweet-embed::after{
 	all:unset;
@@ -425,7 +439,6 @@ blockquote.tweet-embed{
 .tweet-embed-hr{
 	border:.1px solid;
 	margin:.5em 0 .5em 0;
-	display:block;
 }
 .tweet-embed-meta{
 	text-decoration:none !important;
