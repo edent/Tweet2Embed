@@ -556,6 +556,7 @@ if not pretty_print :
 	tweet_html = tweet_html.replace("\t", "")
 
 #   Copy to clipboard
+pyperclip.copy( tweet_html )
 #   Print to say we've finished
 print( f"Copied {tweet_id}" )
 
