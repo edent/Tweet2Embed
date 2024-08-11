@@ -243,6 +243,7 @@ def tweet_to_html( tweet_data ) :
 	tweet_name     = tweet_data["user"]["name"]
 	tweet_user     = tweet_data["user"]["screen_name"]
 	tweet_avatar   = tweet_data["user"]["profile_image_url_https"]
+	tweet_shape    = tweet_data["user"]["profile_image_shape"]
 	tweet_text     = tweet_data["text"]
 	tweet_date     = tweet_data["created_at"] 
 	tweet_lang     = tweet_data["lang"]
@@ -292,13 +293,21 @@ def tweet_to_html( tweet_data ) :
 	base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
 	tweet_avatar = f'data:image/webp;base64,{base64_utf8_str}'
 
+	#	Avatar shape
+	if tweet_shape == "Circle" :
+		avatar_shape = "tweet-embed-avatar-circle"
+	elif tweet_shape == "Square" :
+		avatar_shape = "tweet-embed-avatar-square"
+	else :
+		avatar_shape = "tweet-embed-avatar-circle"
+
 	#   HTML
 	tweet_html = f'''
 	<blockquote class="tweet-embed" id="tweet-embed-{tweet_id}" lang="{tweet_lang}">
 		{tweet_parent}
 		<header class="tweet-embed-header">
 			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user">
-				<img class="tweet-embed-avatar" src="{tweet_avatar}" alt="">
+				<img class="tweet-embed-avatar {avatar_shape}" src="{tweet_avatar}" alt="">
 				<div class="tweet-embed-user-names">
 					<p class="tweet-embed-user-names-name">{tweet_name}</p>@{tweet_user}
 				</div>
@@ -384,8 +393,13 @@ blockquote.tweet-embed {
 .tweet-embed-avatar {
 	width: 3em;
 	height: 3em;
-	border-radius: 100%;
 	margin-right: .5em;
+}
+.tweet-embed-avatar-circle {
+	border-radius: 50%;
+}
+.tweet-embed-avatar-square {
+	border-radius: 5%;
 }
 .tweet-embed-user-names-name {
 	display: flex;
