@@ -32,12 +32,14 @@ arguments.add_argument('id',       type=int,            help='ID of the Tweet (i
 arguments.add_argument('--thread', action='store_true', help='Show the thread (default false)', required=False)
 arguments.add_argument('--css',    action='store_true', help='Copy the CSS (default false)',    required=False)
 arguments.add_argument('--pretty', action='store_true', help='Pretty Print the output (default false)',    required=False)
+arguments.add_argument('--save',   action='store_true', help='Save the output to a file (default false)',    required=False)
 
 args = arguments.parse_args()
 tweet_id = args.id
 thread   = args.thread
 css      = args.css
 pretty   = args.pretty
+save     = args.save
 
 if ( True == thread ):
 	thread_show = True
@@ -53,6 +55,11 @@ if ( True == pretty ):
 	pretty_print = True
 else :
 	pretty_print = False
+
+if ( True == save ):
+	save_file = True
+else :
+	save_file = False
 
 def tweet_entities_to_html(text, entities):
 	#	Initialize a list to hold parts of the HTML output
@@ -549,16 +556,16 @@ if not pretty_print :
 	tweet_html = tweet_html.replace("\t", "")
 
 #   Copy to clipboard
-pyperclip.copy( tweet_html )
-
-#	Save HTML
-#   Save directory
-output_directory = "output"
-os.makedirs(output_directory, exist_ok = True)
-save_file = os.path.join( output_directory, f"{tweet_id}.html" ) 
-#   Save as HTML file
-with open( save_file, 'w', encoding="utf-8" ) as html_file:
-    html_file.write( tweet_html )
-
 #   Print to say we've finished
-print( f"Copied {tweet_id} - saved to {save_file}" )
+print( f"Copied {tweet_id}" )
+
+if save_file :
+	#	Save HTML
+	#   Save directory
+	output_directory = "output"
+	os.makedirs(output_directory, exist_ok = True)
+	save_location = os.path.join( output_directory, f"{tweet_id}.html" ) 
+	#   Save as HTML file
+	with open( save_location, 'w', encoding="utf-8" ) as html_file:
+		html_file.write( tweet_html )
+	print( f"Saved to {save_location}" )
