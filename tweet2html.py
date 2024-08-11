@@ -34,9 +34,9 @@ arguments.add_argument('--pretty', action='store_true', help='Pretty Print the o
 
 args = arguments.parse_args()
 tweet_id = args.id
-thread = args.thread
-css = args.css
-pretty = args.pretty
+thread   = args.thread
+css      = args.css
+pretty   = args.pretty
 
 if ( True == thread ):
 	thread_show = True
@@ -195,12 +195,14 @@ def get_card_html( card_data ) :
 			poll_4_label =        card_data["binding_values"]["choice4_label"]["string_value"]
 			poll_4_count = (int) (card_data["binding_values"]["choice4_count"]["string_value"])
 
+		#	Calculate the percentages. Round to 1 decimal place.
 		poll_total = poll_1_count + poll_2_count + poll_3_count + poll_4_count
 		poll_1_percent = '{0:.1f}'.format( (poll_1_count / poll_total) * 100 )
 		poll_2_percent = '{0:.1f}'.format( (poll_2_count / poll_total) * 100 )
 		poll_3_percent = '{0:.1f}'.format( (poll_3_count / poll_total) * 100 )
 		poll_4_percent = '{0:.1f}'.format( (poll_4_count / poll_total) * 100 )
 
+		#	Generate semantic HTML
 		if poll_1_label != "" :
 			poll_html += f'''
 				<hr class="tweet-embed-hr">
@@ -225,7 +227,6 @@ def get_card_html( card_data ) :
 	return poll_html
 
 def tweet_to_html( tweet_data ) :
-
 	#	Show the thread / quote?
 	tweet_parent = ""
 	tweet_quote  = ""
@@ -234,7 +235,6 @@ def tweet_to_html( tweet_data ) :
 			tweet_parent = tweet_to_html( tweet_data["parent"] )
 		if "quoted_tweet" in tweet_data :
 			tweet_quote = tweet_to_html( tweet_data["quoted_tweet"] )
-
 
 	#	Take the data from the API of a single Tweet (which might also be a quote or reply).
 	#	Create a semantic HTML representation
@@ -245,6 +245,7 @@ def tweet_to_html( tweet_data ) :
 	tweet_avatar   = tweet_data["user"]["profile_image_url_https"]
 	tweet_text     = tweet_data["text"]
 	tweet_date     = tweet_data["created_at"] 
+	tweet_lang     = tweet_data["lang"]
 	tweet_likes    = (int)(tweet_data.get("favorite_count",     0))#	Might not exist
 	tweet_replies  = (int)(tweet_data.get("conversation_count", 0))#	Might not exist
 	tweet_entities = tweet_data["entities"] 
@@ -292,7 +293,7 @@ def tweet_to_html( tweet_data ) :
 
 	#   HTML
 	tweet_html = f'''
-	<blockquote class="tweet-embed" id="tweet-embed-{tweet_id}">
+	<blockquote class="tweet-embed" id="tweet-embed-{tweet_id}" lang="{tweet_lang}">
 		{tweet_parent}
 		<header class="tweet-embed-header">
 			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user">
