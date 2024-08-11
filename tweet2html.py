@@ -138,14 +138,14 @@ def get_media( mediaDetails) :
 	media_html = ""
 	#	Iterate through the attached media
 	for media in mediaDetails :
-		#   Convert small version of media to embedded WebP
+		#	Convert small version of media to embedded WebP
 		media_url  = media["media_url_https"] + ":small"
 		media_img  = requests.get(media_url)
 		media_img  = Image.open(io.BytesIO(media_img.content))
 		output_img = os.path.join( tempfile.gettempdir() , f"temp.webp" )
 		media_img.save( output_img, 'webp', optimize=True, quality=60 )
 	
-		#   Convert image to base64 data URl
+		#	Convert image to base64 data URl
 		binary_img      = open(output_img, 'rb').read()
 		base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
 		media_img = f'data:image/webp;base64,{base64_utf8_str}'
@@ -171,6 +171,9 @@ def get_card_html( card_data ) :
 	poll_html = ""
 	#	As per https://github.com/igorbrigadir/twitter-advanced-search
 	card_name = card_data["name"] 
+	print( "Card of type " + card_name )
+
+	#	Poll
 	if card_name == "poll2choice_text_only" or card_name == "poll3choice_text_only" or card_name == "poll4choice_text_only" :
 		#	Default values
 		poll_1_label = ""
@@ -225,7 +228,48 @@ def get_card_html( card_data ) :
 				<label for="poll_4_count">{poll_4_label}: ({poll_4_count:n})</label><br>
 				<meter class="tweet-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
 			'''
-	return poll_html
+		return poll_html
+
+	#	Photo Card
+	if "summary_large_image" == card_name :
+		card_vanity      = ""
+		card_title       = ""
+		card_description = ""
+		card_thumbnail   = ""
+		card_url         = ""
+		card_html        = ""
+
+		if "vanity_url" in card_data["binding_values"] :
+			card_vanity = card_data["binding_values"]["vanity_url"]["string_value"]
+		if "title" in card_data["binding_values"] :
+			card_title = card_data["binding_values"]["title"]["string_value"]
+		if "description" in card_data["binding_values"] :
+			card_description = card_data["binding_values"]["description"]["string_value"]
+		if "thumbnail_image" in card_data["binding_values"] :
+			card_thumbnail = card_data["binding_values"]["thumbnail_image"]["image_value"]["url"]
+			#   Convert  media to embedded WebP
+			media_img  = requests.get(card_thumbnail)
+			media_img  = Image.open(io.BytesIO(media_img.content))
+			output_img = os.path.join( tempfile.gettempdir() , f"temp.webp" )
+			media_img.save( output_img, 'webp', optimize=True, quality=60 )
+		
+			#   Convert image to base64 data URl
+			binary_img      = open(output_img, 'rb').read()
+			base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
+			card_thumbnail = f'data:image/webp;base64,{base64_utf8_str}'
+		if "url" in card_data :
+			card_url = card_data["url"]
+
+		card_html += f'''
+			<br><br>
+			<a href="{card_url}" class="tweet-embed-card">
+				<img src="{card_thumbnail}" alt="" class="tweet-embed-media">
+				<p>{card_vanity}</p>
+				<p>{card_title}</p>
+				<p>{card_description}</p>
+			</a>
+		'''
+		return card_html
 
 def tweet_to_html( tweet_data ) :
 	#	Show the thread / quote?
@@ -454,6 +498,8 @@ blockquote.tweet-embed{
 .tweet-embed-media, .tweet-embed-video{
 	border-radius:1em;
 	max-width:100%;
+	margin:auto;
+	display:block;
 }
 .tweet-embed-reply{
 	font-size:.75em;
@@ -462,6 +508,15 @@ blockquote.tweet-embed{
 .tweet-embed-meter{
 	width:100%;
 	background:#0005;
+}
+.tweet-embed-card{
+	text-decoration:none !important;
+	color:unset !important;
+	border:.5px solid;
+	display:block;
+	font-size:.85em;
+	padding:.5em;
+	border-radius:1em;
 }
 </style>
 '''
