@@ -19,6 +19,10 @@ import html
 from datetime import datetime
 from dateutil import parser
 
+#	Formatting
+import locale
+locale.setlocale(locale.LC_ALL, '')
+
 #   Command line options
 arguments = argparse.ArgumentParser(
 	prog='tweet2html',
@@ -200,22 +204,22 @@ def get_card_html( card_data ) :
 		if poll_1_label != "" :
 			poll_html += f'''
 				<hr class="tweet-embed-hr">
-				<label for="poll_1_count">{poll_1_label}: ({poll_1_count})</label><br>
+				<label for="poll_1_count">{poll_1_label}: ({poll_1_count:n})</label><br>
 				<meter class="tweet-embed-meter" id="poll_1_count" min="0" max="100" low="33" high="66" value="{poll_1_percent}">{poll_1_count}</meter><br>
 			'''
 		if poll_2_label != "" :
 			poll_html += f'''
-				<label for="poll_2_count">{poll_2_label}: ({poll_2_count})</label><br>
+				<label for="poll_2_count">{poll_2_label}: ({poll_2_count:n})</label><br>
 				<meter class="tweet-embed-meter" id="poll_2_count" min="0" max="100" low="33" high="66" value="{poll_2_percent}">{poll_2_count}</meter><br>
 			'''
 		if poll_3_label != "" :
 			poll_html += f'''
-				<label for="poll_3_count">{poll_3_label}: ({poll_3_count})</label><br>
+				<label for="poll_3_count">{poll_3_label}: ({poll_3_count:n})</label><br>
 				<meter class="tweet-embed-meter" id="poll_3_count" min="0" max="100" low="33" high="66" value="{poll_3_percent}">{poll_3_count}</meter><br>
 			'''
 		if poll_4_label != "" :
 			poll_html += f'''
-				<label for="poll_4_count">{poll_4_label}: ({poll_4_count})</label><br>
+				<label for="poll_4_count">{poll_4_label}: ({poll_4_count:n})</label><br>
 				<meter class="tweet-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
 			'''
 	return poll_html
@@ -299,7 +303,13 @@ def tweet_to_html( tweet_data ) :
 			</a>
 			<img class="tweet-embed-logo" alt="" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
 		</header>
-		<section class="tweet-embed-text">{tweet_reply}{tweet_text}{tweet_media}{tweet_card}{tweet_quote}</section>
+		<section class="tweet-embed-text">
+			{tweet_reply}
+			{tweet_text}
+			{tweet_media}
+			{tweet_card}
+			{tweet_quote}
+		</section>
 		<hr class="tweet-embed-hr">
 		<footer class="tweet-embed-footer">
 			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes}</a>
