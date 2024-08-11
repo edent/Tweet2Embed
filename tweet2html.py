@@ -260,9 +260,13 @@ def tweet_to_html( tweet_data ) :
 	#	Is this a reply?
 	if "in_reply_to_screen_name" in tweet_data :
 		tweet_reply_to   = tweet_data["in_reply_to_screen_name"]
-		tweet_reply_link = tweet_data["in_reply_to_status_id_str"]
+		tweet_reply_id = tweet_data.get("in_reply_to_status_id_str","")	#	Doesn't exist on older tweets
+		if "" == tweet_reply_id :
+			tweet_reply_link = f'https://twitter.com/{tweet_reply_to}'
+		else :
+			tweet_reply_link = f'https://twitter.com/{tweet_reply_to}/status/{tweet_reply_id}'
 		tweet_reply = f'''
-	<small class="tweet-embed-reply"><a href="https://twitter.com/{tweet_reply_to}/status/{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+	<small class="tweet-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
 	'''
 	else :
 		tweet_reply = ""
