@@ -29,6 +29,7 @@ Usage:
 * `909106648928718848` Multiple images
 * `1560621791470448642` Quote Tweet
 * `670060095972245504` Poll
+* `83659275024601088` Deleted Tweet
 
 ## Known bugs:
 

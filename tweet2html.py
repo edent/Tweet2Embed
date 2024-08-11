@@ -389,7 +389,7 @@ blockquote.tweet-embed{
 	width:550px;
 	max-width:100%;
 	font-family:sans-serif;
-	margin:0;
+	margin:auto;
 	margin-bottom:.5em;
 	padding:1em;
 	border-radius:1em;
