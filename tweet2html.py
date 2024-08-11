@@ -288,7 +288,7 @@ def tweet_to_html( tweet_data ) :
 
 	#   HTML
 	tweet_html = f'''
-	<blockquote class="tweet-embed">
+	<blockquote class="tweet-embed" id="tweet-embed-{tweet_id}">
 		{tweet_parent}
 		<header class="tweet-embed-header">
 			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user">
@@ -315,9 +315,10 @@ json_url =  f"https://cdn.syndication.twimg.com/tweet-result?id={tweet_id}&lang=
 response = requests.get(json_url)
 data = response.json()
 
+#	Turn the Tweet into HTML
 tweet_html = tweet_to_html(data)
 
-#   Generate HTML to be pasted
+#   Generate Content to be pasted
 
 #	CSS
 tweet_css = '''
@@ -424,7 +425,7 @@ blockquote.tweet-embed {
 if css_show :
 	tweet_html = tweet_css + tweet_html
 
-#   Compact the HTML if necessary
+#   Compact the output if necessary
 if not pretty_print :
 	tweet_html = tweet_html.replace("\n", "")
 	tweet_html = tweet_html.replace("\t", "")
@@ -432,13 +433,14 @@ if not pretty_print :
 #   Copy to clipboard
 pyperclip.copy( tweet_html )
 
-#   Print to say we've finished
-print( f"Copied {tweet_id}" )
-
 #	Save HTML
 #   Save directory
 output_directory = "output"
 os.makedirs(output_directory, exist_ok = True)
+save_file = os.path.join( output_directory, f"{tweet_id}.html" ) 
 #   Save as HTML file
-with open(  os.path.join( output_directory, f"{tweet_id}.html" ) , 'w', encoding="utf-8" ) as html_file:
+with open( save_file, 'w', encoding="utf-8" ) as html_file:
     html_file.write( tweet_html )
+
+#   Print to say we've finished
+print( f"Copied {tweet_id} - saved to {save_file}" )
