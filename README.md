@@ -31,6 +31,7 @@ Usage:
 * `670060095972245504` Poll
 * `83659275024601088` Deleted Tweet
 * `1131218926493413377` Summary Card
+* `1485588404037648389` Reply to a quoted Tweet
 
 ## Known bugs:
 

@@ -253,20 +253,21 @@ def get_card_html( card_data ) :
 
 		if "vanity_url" in card_data["binding_values"] :
 			card_vanity = card_data["binding_values"]["vanity_url"]["string_value"]
-			card_vanity_html = f"<p>{card_vanity}</p>"
+			card_vanity_html = f"{card_vanity}<br>"
 		
 		if "title" in card_data["binding_values"] :
 			card_title = card_data["binding_values"]["title"]["string_value"]
-			card_title_html = f"<p>{card_title}</p>"
+			card_title_html = f"{card_title}<br>"
 		
 		if "description" in card_data["binding_values"] :
 			card_description = card_data["binding_values"]["description"]["string_value"]
-			card_description_html = f"<p>{card_description}</p>"
+			card_description_html = f"{card_description}<br>"
 		
 		if "summary_photo_image_alt_text" in card_data["binding_values"] :
-			card_thumbnail_alt = card_data["binding_values"]["summary_photo_image_alt_text"]["string_value"]
+			card_thumbnail_alt = html.escape( card_data["binding_values"]["summary_photo_image_alt_text"]["string_value"] )
 		
 		if "thumbnail_image" in card_data["binding_values"] :
+			# print("Converting thumbnail_image")
 			card_thumbnail = card_data["binding_values"]["thumbnail_image"]["image_value"]["url"]
 			#   Convert  media to embedded WebP
 			media_img  = requests.get(card_thumbnail)
@@ -286,7 +287,6 @@ def get_card_html( card_data ) :
 			card_url = card_data["url"]
 
 		card_html += f'''
-			<br><br>
 			<a href="{card_url}" class="tweet-embed-card">
 				{card_thumbnail_html}
 				{card_vanity_html}
@@ -322,6 +322,9 @@ def tweet_to_html( tweet_data ) :
 	tweet_retweets = (int)(tweet_data.get("retweet_count",      0))#	Might not exist
 	tweet_entities = tweet_data["entities"] 
 	tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
+
+	#	Submit the Tweet to Archive.org
+	requests.post( "https://web.archive.org/save/", data={"url": tweet_url, "capture_all":"on"} )
 
 	#	Get the datetime
 	tweet_time = parser.parse( tweet_date )
