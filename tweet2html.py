@@ -305,6 +305,8 @@ def tweet_to_html( tweet_data ) :
 	tweet_text     = tweet_data["text"]
 	tweet_date     = tweet_data["created_at"] 
 	tweet_lang     = tweet_data["lang"]
+	print( f"Detected language - {tweet_lang}" )
+
 	tweet_likes    = (int)(tweet_data.get("favorite_count",     0))#	Might not exist
 	tweet_replies  = (int)(tweet_data.get("conversation_count", 0))#	Might not exist
 	tweet_retweets = (int)(tweet_data.get("retweet_count",      0))#	Might not exist
