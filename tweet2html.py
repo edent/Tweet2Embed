@@ -366,12 +366,13 @@ def tweet_to_html( tweet_data ) :
 		avatar_shape = "tweet-embed-avatar-circle"
 
 	#	Schema.org metadata
-	schema_post   = ' itemscope itemtype="https://schema.org/SocialMediaPosting"' if schema_org else ""
-	schema_author = ' itemprop="author" itemscope itemtype="https://schema.org/Person"' if schema_org else ""
-	schema_url    = ' itemprop="url"' if schema_org else ""
-	schema_name   = ' itemprop="name"' if schema_org else ""
-	schema_body   = ' itemprop="articleBody"' if schema_org else ""
+	schema_post   = ' itemscope itemtype="https://schema.org/SocialMediaPosting"'       if schema_org else ""
+	schema_body   = ' itemprop="articleBody"'   if schema_org else ""
 	schema_time   = ' itemprop="datePublished"' if schema_org else ""
+	schema_author = ' itemprop="author" itemscope itemtype="https://schema.org/Person"' if schema_org else ""
+	schema_url    = ' itemprop="url"'   if schema_org else ""
+	schema_image  = ' itemprop="image"' if schema_org else ""
+	schema_name   = ' itemprop="name"'  if schema_org else ""
 
 	#   HTML
 	tweet_html = f'''
@@ -379,7 +380,7 @@ def tweet_to_html( tweet_data ) :
 		{tweet_parent}
 		<header class="tweet-embed-header"{schema_author}>
 			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user"{schema_url}>
-				<img class="tweet-embed-avatar {avatar_shape}" src="{tweet_avatar}" alt="">
+				<img class="tweet-embed-avatar {avatar_shape}" src="{tweet_avatar}" alt=""{schema_image}>
 				<div class="tweet-embed-user-names">
 					<p class="tweet-embed-user-names-name"{schema_name}>{tweet_name}</p>@{tweet_user}
 				</div>
@@ -408,7 +409,7 @@ def tweet_to_html( tweet_data ) :
 for _ in range(5):
 	#	Lazy retry strategy
 	try :
-		print( "Downloading data…")
+		print( "Downloading data…" )
 		token = random.randint(1,10000)
 		json_url =  f"https://cdn.syndication.twimg.com/tweet-result?id={tweet_id}&lang=en&token={token}"
 		response = requests.get(json_url)
@@ -420,7 +421,7 @@ for _ in range(5):
 
 #	If Tweet was deleted, exit.
 if "TweetTombstone" == data["__typename"] :
-	print("This Post was deleted by the Post author.")
+	print( "This Post was deleted by the Post author." )
 	raise SystemExit
 
 #	Turn the Tweet into HTML
