@@ -28,38 +28,22 @@ locale.setlocale(locale.LC_ALL, '')
 arguments = argparse.ArgumentParser(
 	prog='tweet2html',
 	description='Convert a Tweet ID to semantic HTML')
-arguments.add_argument('id',       type=int,            help='ID of the Tweet (integer)')
-arguments.add_argument('--thread', action='store_true', help='Show the thread (default false)', required=False)
-arguments.add_argument('--css',    action='store_true', help='Copy the CSS (default false)',    required=False)
-arguments.add_argument('--pretty', action='store_true', help='Pretty Print the output (default false)',    required=False)
-arguments.add_argument('--save',   action='store_true', help='Save the output to a file (default false)',    required=False)
+arguments.add_argument("id", type=int,                        help="ID of the Tweet (integer)")
+arguments.add_argument("-t", "--thread", action="store_true", help="Show the thread (default false)", required=False)
+arguments.add_argument("-c", "--css",    action="store_true", help="Copy the CSS (default false)",    required=False)
+arguments.add_argument("-p", "--pretty", action="store_true", help="Pretty Print the output (default false)",    required=False)
+arguments.add_argument("-s", "--save",   action="store_true", help="Save the output to a file (default false)",    required=False)
+arguments.add_argument("-m", "--schema", action='store_true', help="Add Schema.org metadata (default false)",    required=False)
 
 args = arguments.parse_args()
 tweet_id = args.id
-thread   = args.thread
-css      = args.css
-pretty   = args.pretty
-save     = args.save
 
-if ( True == thread ):
-	thread_show = True
-else :
-	thread_show = False
-
-if ( True == css ):
-	css_show = True
-else :
-	css_show = False
-
-if ( True == pretty ):
-	pretty_print = True
-else :
-	pretty_print = False
-
-if ( True == save ):
-	save_file = True
-else :
-	save_file = False
+#	Get settings from arguments
+thread_show  = True if args.thread else False
+css_show     = True if args.css    else False
+pretty_print = True if args.pretty else False
+save_file    = True if args.save   else False
+schema_org   = True if args.schema else False
 
 def tweet_entities_to_html(text, entities):
 	#	Initialize a list to hold parts of the HTML output
@@ -341,8 +325,8 @@ def tweet_to_html( tweet_data ) :
 		else :
 			tweet_reply_link = f'https://twitter.com/{tweet_reply_to}/status/{tweet_reply_id}'
 		tweet_reply = f'''
-	<small class="tweet-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
-	'''
+			<small class="tweet-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+		'''
 	else :
 		tweet_reply = ""
 
@@ -381,20 +365,28 @@ def tweet_to_html( tweet_data ) :
 	else :
 		avatar_shape = "tweet-embed-avatar-circle"
 
+	#	Schema.org metadata
+	schema_post   = ' itemscope itemtype="https://schema.org/SocialMediaPosting"' if schema_org else ""
+	schema_author = ' itemprop="author" itemscope itemtype="https://schema.org/Person"' if schema_org else ""
+	schema_url    = ' itemprop="url"' if schema_org else ""
+	schema_name   = ' itemprop="name"' if schema_org else ""
+	schema_body   = ' itemprop="articleBody"' if schema_org else ""
+	schema_time   = ' itemprop="datePublished"' if schema_org else ""
+
 	#   HTML
 	tweet_html = f'''
-	<blockquote class="tweet-embed" id="tweet-embed-{tweet_id}" lang="{tweet_lang}">
+	<blockquote class="tweet-embed" id="tweet-embed-{tweet_id}" lang="{tweet_lang}"{schema_post}>
 		{tweet_parent}
-		<header class="tweet-embed-header">
-			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user">
+		<header class="tweet-embed-header"{schema_author}>
+			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user"{schema_url}>
 				<img class="tweet-embed-avatar {avatar_shape}" src="{tweet_avatar}" alt="">
 				<div class="tweet-embed-user-names">
-					<p class="tweet-embed-user-names-name">{tweet_name}</p>@{tweet_user}
+					<p class="tweet-embed-user-names-name"{schema_name}>{tweet_name}</p>@{tweet_user}
 				</div>
 			</a>
 			<img class="tweet-embed-logo" alt="" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
 		</header>
-		<section class="tweet-embed-text">
+		<section class="tweet-embed-text"{schema_body}>
 			{tweet_reply}
 			{tweet_text}
 			{tweet_media}
@@ -406,7 +398,7 @@ def tweet_to_html( tweet_data ) :
 			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes:n}</a>
 			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-meta">💬 {tweet_replies:n}</a>
 			<a href="{tweet_url}" aria-label="{tweet_retweets} retweets" class="tweet-embed-meta">♻️ {tweet_retweets:n}</a>			
-			<a href="{tweet_url}"><time datetime="{tweet_date}">{tweet_time}</time></a>
+			<a href="{tweet_url}"><time datetime="{tweet_date}"{schema_time}>{tweet_time}</time></a>
 		</footer>
 	</blockquote>
 	'''
