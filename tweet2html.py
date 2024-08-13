@@ -146,6 +146,7 @@ def get_media( mediaDetails) :
 	#	Iterate through the attached media
 	for media in mediaDetails :
 		#	Convert small version of media to embedded WebP
+		print( "Embedding media…" )
 		media_url  = media["media_url_https"] + ":small"
 		media_img  = requests.get(media_url)
 		media_img  = Image.open(io.BytesIO(media_img.content))
@@ -164,6 +165,7 @@ def get_media( mediaDetails) :
 	
 		#	Is this a video or an image?
 		if "video_info" in media :
+			print( "Video poster…" )
 			#	Embed the poster in the <video>, link to last video which should be highest quality
 			#	TODO! Find a better way to get the best video
 			media_html += f'''
@@ -267,7 +269,7 @@ def get_card_html( card_data ) :
 			card_thumbnail_alt = html.escape( card_data["binding_values"]["summary_photo_image_alt_text"]["string_value"] )
 		
 		if "thumbnail_image" in card_data["binding_values"] :
-			# print("Converting thumbnail_image")
+			print( "Converting card's thumbnail_image…" )
 			card_thumbnail = card_data["binding_values"]["thumbnail_image"]["image_value"]["url"]
 			#   Convert  media to embedded WebP
 			media_img  = requests.get(card_thumbnail)
@@ -320,11 +322,9 @@ def tweet_to_html( tweet_data ) :
 	tweet_likes    = (int)(tweet_data.get("favorite_count",     0))#	Might not exist
 	tweet_replies  = (int)(tweet_data.get("conversation_count", 0))#	Might not exist
 	tweet_retweets = (int)(tweet_data.get("retweet_count",      0))#	Might not exist
-	tweet_entities = tweet_data["entities"] 
+	tweet_entities = tweet_data["entities"]
+	global tweet_url
 	tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
-
-	#	Submit the Tweet to Archive.org
-	requests.post( "https://web.archive.org/save/", data={"url": tweet_url, "capture_all":"on"} )
 
 	#	Get the datetime
 	tweet_time = parser.parse( tweet_date )
@@ -361,6 +361,7 @@ def tweet_to_html( tweet_data ) :
 	tweet_text = tweet_text.replace("\n","<br>")
 
 	#   Convert avatar to embedded WebP
+	print( "Storing avatar…")
 	tweet_avatar = requests.get(tweet_avatar)
 	tweet_avatar = Image.open(io.BytesIO(tweet_avatar.content))
 	output_img = os.path.join( tempfile.gettempdir() , f"{tweet_id}.webp")
@@ -413,6 +414,7 @@ def tweet_to_html( tweet_data ) :
 for _ in range(5):
 	#	Lazy retry strategy
 	try :
+		print( "Downloading data…")
 		token = random.randint(1,10000)
 		json_url =  f"https://cdn.syndication.twimg.com/tweet-result?id={tweet_id}&lang=en&token={token}"
 		response = requests.get(json_url)
@@ -555,6 +557,7 @@ if css_show :
 
 #   Compact the output if necessary
 if not pretty_print :
+	print( "Compacting…")
 	tweet_html = tweet_html.replace("\n", "")
 	tweet_html = tweet_html.replace("\t", "")
 
@@ -573,3 +576,7 @@ if save_file :
 	with open( save_location, 'w', encoding="utf-8" ) as html_file:
 		html_file.write( tweet_html )
 	print( f"Saved to {save_location}" )
+
+#	Submit the Tweet to Archive.org
+print( f"Archiving… {tweet_url}" )
+requests.post( "https://web.archive.org/save/", data={"url": tweet_url, "capture_all":"on"} )

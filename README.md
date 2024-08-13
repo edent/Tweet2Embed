@@ -38,4 +38,5 @@ Usage:
 * Fractional Scaling may produce slightly fuzzy images (Wayland related?)
 * On tweet2img, the alt text contains t.co URls rather than the expanded ones (could use entities?)
 * Some Twitter Cards in the HTML (are there more?)
+* No Dark Mode (overkill?)
 * Many other things (probably?)
