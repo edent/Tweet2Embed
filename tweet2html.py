@@ -304,8 +304,10 @@ def tweet_to_html( tweet_data ) :
 	tweet_quote  = ""
 	if thread_show :
 		if "parent" in tweet_data :
+			print( "Parent detected…" )
 			tweet_parent = tweet_to_html( tweet_data["parent"] )
 		if "quoted_tweet" in tweet_data :
+			print( "Quote detected…" )
 			tweet_quote = tweet_to_html( tweet_data["quoted_tweet"] )
 
 	#	Take the data from the API of a single Tweet (which might also be a quote or reply).
