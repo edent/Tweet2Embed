@@ -126,7 +126,7 @@ def tweet_entities_to_html(text, entities):
 	return ''.join(html_parts)
 
 def get_media( mediaDetails) :
-	media_html = ""
+	media_html = '<div class="tweet-embed-media-grid">'
 	#	Iterate through the attached media
 	for media in mediaDetails :
 		#	Convert small version of media to embedded WebP
@@ -157,8 +157,10 @@ def get_media( mediaDetails) :
 			'''
 		else:
 			#	Embed the image
-			media_html += f"<a href='{media['media_url_https']}'><img class='tweet-embed-media' alt='{media_alt}' src='{media_img}'></a>"
-	return media_html
+			media_html += f'''
+			<a href="{media['media_url_https']}" class="tweet-embed-media-link"><img class="tweet-embed-media" alt="{media_alt}" src="{media_img}"></a>
+			'''
+	return media_html + "</div>"
 
 def get_card_html( card_data ) :
 	poll_html = ""
@@ -522,11 +524,19 @@ blockquote.tweet-embed{
 	color:blue;
 	text-decoration:underline;
 }
-.tweet-embed-media, .tweet-embed-video{
+.tweet-embed-media-grid {
+	display: flex;
+	flex-wrap: wrap;
+}
+.tweet-embed-media-link {
+	flex-grow: 1;
+	width: 50%;
+}
+.tweet-embed-media, .tweet-embed-video {
+	padding: .1em;
+	width: 100%;
 	border-radius:1em;
 	max-width:100%;
-	margin:auto;
-	display:block;
 }
 .tweet-embed-reply{
 	font-size:.75em;
