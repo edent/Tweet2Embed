@@ -45,6 +45,25 @@ pretty_print = True if args.pretty else False
 save_file    = True if args.save   else False
 schema_org   = True if args.schema else False
 
+def image_to_inline( url ) : 
+	#	Download the image
+	image_file = requests.get( url )
+	#	Convert to bytes
+	image_file = Image.open(io.BytesIO(image_file.content))
+	#	Temp file name with only alphanumeric characters
+	temp_file_name = "".join(x for x in url if x.isalnum())
+	#	Full path of the image
+	output_img = os.path.join( tempfile.gettempdir() , f"{temp_file_name}.webp")
+	#	Save as a low quality WebP
+	image_file.save( output_img, 'webp', optimize=True, quality=60 )
+	#   Convert image to base64 data URl
+	#	Read the image from disk
+	binary_img      = open(output_img, 'rb').read()
+	#	Encode to Base64
+	base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
+	#	Return as data encoded suitable for an <img src="...">
+	return f'data:image/webp;base64,{base64_utf8_str}'
+
 def tweet_entities_to_html(text, entities):
 	#	Initialize a list to hold parts of the HTML output
 	html_parts = []
@@ -131,16 +150,7 @@ def get_media( mediaDetails) :
 	for media in mediaDetails :
 		#	Convert small version of media to embedded WebP
 		print( "Embedding media…" )
-		media_url  = media["media_url_https"] + ":small"
-		media_img  = requests.get(media_url)
-		media_img  = Image.open(io.BytesIO(media_img.content))
-		output_img = os.path.join( tempfile.gettempdir() , f"temp.webp" )
-		media_img.save( output_img, 'webp', optimize=True, quality=60 )
-	
-		#	Convert image to base64 data URl
-		binary_img      = open(output_img, 'rb').read()
-		base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
-		media_img = f'data:image/webp;base64,{base64_utf8_str}'
+		media_img = image_to_inline( media["media_url_https"] + ":small" )
 		
 		#	Find alt text
 		media_alt = ""
@@ -258,15 +268,7 @@ def get_card_html( card_data ) :
 			print( "Converting card's thumbnail_image…" )
 			card_thumbnail = card_data["binding_values"]["thumbnail_image"]["image_value"]["url"]
 			#   Convert  media to embedded WebP
-			media_img  = requests.get(card_thumbnail)
-			media_img  = Image.open(io.BytesIO(media_img.content))
-			output_img = os.path.join( tempfile.gettempdir() , f"temp.webp" )
-			media_img.save( output_img, 'webp', optimize=True, quality=60 )
-		
-			#   Convert image to base64 data URl
-			binary_img      = open(output_img, 'rb').read()
-			base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
-			card_thumbnail = f'data:image/webp;base64,{base64_utf8_str}'
+			card_thumbnail = image_to_inline( card_thumbnail )
 			card_thumbnail_html = f'''
 				<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
 				'''
@@ -316,6 +318,15 @@ def tweet_to_html( tweet_data ) :
 	global tweet_url
 	tweet_url      = f"https://twitter.com/{tweet_user}/status/{tweet_id}"
 
+	#	User labels
+	if "highlighted_label" in tweet_data["user"] :
+		tweet_label     = html.escape( tweet_data["user"]["highlighted_label"]["description"] )
+		tweet_badge_img = image_to_inline( tweet_data["user"]["highlighted_label"]["badge"]["url"] )
+		print( f"Badge found '{tweet_label}'…")
+		tweet_badge  = f'<br><img src="{tweet_badge_img}" alt="" class="tweet-embed-badge"> {tweet_label}'
+	else :
+		tweet_badge = ""
+
 	#	Get the datetime
 	tweet_time = parser.parse( tweet_date )
 	tweet_time = tweet_time.strftime('%H:%M - %a %d %B %Y')
@@ -352,14 +363,7 @@ def tweet_to_html( tweet_data ) :
 
 	#   Convert avatar to embedded WebP
 	print( "Storing avatar…")
-	tweet_avatar = requests.get(tweet_avatar)
-	tweet_avatar = Image.open(io.BytesIO(tweet_avatar.content))
-	output_img = os.path.join( tempfile.gettempdir() , f"{tweet_id}.webp")
-	tweet_avatar.save( output_img, 'webp', optimize=True, quality=60 )
-	#   Convert image to base64 data URl
-	binary_img      = open(output_img, 'rb').read()
-	base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
-	tweet_avatar = f'data:image/webp;base64,{base64_utf8_str}'
+	tweet_avatar = image_to_inline( tweet_avatar )
 
 	#	Avatar shape
 	if tweet_shape == "Circle" :
@@ -386,7 +390,7 @@ def tweet_to_html( tweet_data ) :
 			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user"{schema_url}>
 				<img class="tweet-embed-avatar {avatar_shape}" src="{tweet_avatar}" alt=""{schema_image}>
 				<div class="tweet-embed-user-names">
-					<p class="tweet-embed-user-names-name"{schema_name}>{tweet_name}</p>@{tweet_user}
+					<p class="tweet-embed-user-names-name"{schema_name}>{tweet_name}</p>@{tweet_user}{tweet_badge}
 				</div>
 			</a>
 			<img class="tweet-embed-logo" alt="" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
@@ -554,6 +558,10 @@ blockquote.tweet-embed{
 	font-size:.85em;
 	padding:.5em;
 	border-radius:1em;
+}
+.tweet-embed-badge{
+	height:1em;
+	vertical-align: text-top;
 }
 </style>
 '''
