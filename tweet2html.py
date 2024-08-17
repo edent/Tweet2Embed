@@ -49,18 +49,20 @@ def image_to_inline( url ) :
 	#	Download the image
 	image_file = requests.get( url )
 	#	Convert to bytes
-	image_file = Image.open(io.BytesIO(image_file.content))
+	image_file = Image.open( io.BytesIO( image_file.content ) )
 	#	Temp file name with only alphanumeric characters
 	temp_file_name = "".join(x for x in url if x.isalnum())
 	#	Full path of the image
-	output_img = os.path.join( tempfile.gettempdir() , f"{temp_file_name}.webp")
+	output_img = os.path.join( tempfile.gettempdir() , f"{temp_file_name}.webp" )
 	#	Save as a low quality WebP
 	image_file.save( output_img, 'webp', optimize=True, quality=60 )
 	#   Convert image to base64 data URl
 	#	Read the image from disk
-	binary_img      = open(output_img, 'rb').read()
+	binary_img      = open( output_img, 'rb' ).read()
 	#	Encode to Base64
-	base64_utf8_str = base64.b64encode(binary_img).decode('utf-8')
+	base64_utf8_str = base64.b64encode( binary_img ).decode('utf-8')
+	#	Delete the temporary file
+	os.remove( output_img )
 	#	Return as data encoded suitable for an <img src="...">
 	return f'data:image/webp;base64,{base64_utf8_str}'
 
@@ -594,4 +596,4 @@ if save_file :
 
 #	Submit the Tweet to Archive.org
 print( f"Archiving… {tweet_url}" )
-requests.post( "https://web.archive.org/save/", data={"url": tweet_url, "capture_all":"on"} )
+requests.post( "https://web.archive.org/save/", data={"url": tweet_url, "capture_all":"on"}, timeout=5 )
