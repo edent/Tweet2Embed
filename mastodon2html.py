@@ -107,67 +107,33 @@ def get_media( media_attachments) :
 			'''
 	return media_html + "</div>"
 
-def get_card_html( card_data ) :
-	poll_html = ""
-	card_type = card_data["type"] 
-	print( "Card of type " + card_type )
+def get_poll_html( poll_data ) :
+	print( "Poll…")
+	poll_html = "<hr class=\"tweet-embed-hr\">"
 
-	#	Poll
-	if card_type == "poll2choice_text_only" or card_type == "poll3choice_text_only" or card_type == "poll4choice_text_only" :
-		#	Default values
-		poll_1_label = ""
-		poll_2_label = ""
-		poll_3_label = ""
-		poll_4_label = ""
-		poll_1_count = 0
-		poll_2_count = 0
-		poll_3_count = 0
-		poll_4_count = 0
+	votes_count = poll_data["votes_count"]
 
-		#	Get labels and counts
-		if "choice1_label" in card_data["binding_values"] :
-			poll_1_label =        card_data["binding_values"]["choice1_label"]["string_value"]
-			poll_1_count = (int) (card_data["binding_values"]["choice1_count"]["string_value"])
-		if "choice2_label" in card_data["binding_values"] :
-			poll_2_label =        card_data["binding_values"]["choice2_label"]["string_value"]
-			poll_2_count = (int) (card_data["binding_values"]["choice2_count"]["string_value"])
-		if "choice3_label" in card_data["binding_values"] :
-			poll_3_label =        card_data["binding_values"]["choice3_label"]["string_value"]
-			poll_3_count = (int) (card_data["binding_values"]["choice3_count"]["string_value"])
-		if "choice4_label" in card_data["binding_values"] :
-			poll_4_label =        card_data["binding_values"]["choice4_label"]["string_value"]
-			poll_4_count = (int) (card_data["binding_values"]["choice4_count"]["string_value"])
+	option_counter = 0
 
+	for option in poll_data["options"] :
+		option_title = option["title"]
 		#	Calculate the percentages. Round to 1 decimal place.
-		poll_total = poll_1_count + poll_2_count + poll_3_count + poll_4_count
-		poll_1_percent = '{0:.1f}'.format( (poll_1_count / poll_total) * 100 )
-		poll_2_percent = '{0:.1f}'.format( (poll_2_count / poll_total) * 100 )
-		poll_3_percent = '{0:.1f}'.format( (poll_3_count / poll_total) * 100 )
-		poll_4_percent = '{0:.1f}'.format( (poll_4_count / poll_total) * 100 )
+		option_votes = option["votes_count"]
+		option_percent = '{0:.1f}'.format( (option_votes / votes_count) * 100 )
 
 		#	Generate semantic HTML
-		if poll_1_label != "" :
-			poll_html += f'''
-				<hr class="tweet-embed-hr">
-				<label for="poll_1_count">{poll_1_label}: ({poll_1_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_1_count" min="0" max="100" low="33" high="66" value="{poll_1_percent}">{poll_1_count}</meter><br>
-			'''
-		if poll_2_label != "" :
-			poll_html += f'''
-				<label for="poll_2_count">{poll_2_label}: ({poll_2_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_2_count" min="0" max="100" low="33" high="66" value="{poll_2_percent}">{poll_2_count}</meter><br>
-			'''
-		if poll_3_label != "" :
-			poll_html += f'''
-				<label for="poll_3_count">{poll_3_label}: ({poll_3_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_3_count" min="0" max="100" low="33" high="66" value="{poll_3_percent}">{poll_3_count}</meter><br>
-			'''
-		if poll_4_label != "" :
-			poll_html += f'''
-				<label for="poll_4_count">{poll_4_label}: ({poll_4_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
-			'''
-		return poll_html
+		poll_html += f'''
+			<label for="poll_{option_counter}">{option_title}: ({option_votes:n})</label><br>
+			<meter class="tweet-embed-meter" id="poll_{option_counter}" min="0" max="100" low="33" high="66" value="{option_percent}">{option_votes}</meter><br>
+		'''
+
+		option_counter += 1
+	
+	return poll_html
+
+def get_card_html( card_data ) :
+	card_type = card_data["type"] 
+	print( "Card of type " + card_type )
 
 	#	Photo Card
 	if "photo" == card_type :
@@ -294,6 +260,12 @@ def mastodon_to_html( mastodon_data ) :
 	if "card" in mastodon_data :
 		if mastodon_data["card"] is not None :
 			mastodon_card = get_card_html( mastodon_data["card"] )
+	
+	#	Add poll
+	mastodon_poll = ""
+	if "poll" in mastodon_data :
+		if mastodon_data["poll"] is not None :
+			mastodon_poll = get_poll_html( mastodon_data["poll"] )
 
 	#   Convert avatar to embedded WebP
 	print( "Storing avatar…")
@@ -323,6 +295,7 @@ def mastodon_to_html( mastodon_data ) :
 		<section class="tweet-embed-text"{schema_body}>
 			{mastodon_text}
 			{mastodon_media}
+			{mastodon_poll}
 			{mastodon_card}
 		</section>
 		<hr class="tweet-embed-hr">
