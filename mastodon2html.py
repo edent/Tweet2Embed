@@ -119,7 +119,10 @@ def get_poll_html( poll_data ) :
 		option_title = option["title"]
 		#	Calculate the percentages. Round to 1 decimal place.
 		option_votes = option["votes_count"]
-		option_percent = '{0:.1f}'.format( (option_votes / votes_count) * 100 )
+		if votes_count > 0 :
+			option_percent = '{0:.1f}'.format( (option_votes / votes_count) * 100 )
+		else :
+			option_percent = "0"
 
 		#	Generate semantic HTML
 		poll_html += f'''
