@@ -106,12 +106,11 @@ def get_media( media_attachments) :
 
 def get_card_html( card_data ) :
 	poll_html = ""
-	#	As per https://github.com/igorbrigadir/twitter-advanced-search
-	card_name = card_data["name"] 
-	print( "Card of type " + card_name )
+	card_type = card_data["type"] 
+	print( "Card of type " + card_type )
 
 	#	Poll
-	if card_name == "poll2choice_text_only" or card_name == "poll3choice_text_only" or card_name == "poll4choice_text_only" :
+	if card_type == "poll2choice_text_only" or card_type == "poll3choice_text_only" or card_type == "poll4choice_text_only" :
 		#	Default values
 		poll_1_label = ""
 		poll_2_label = ""
@@ -168,9 +167,7 @@ def get_card_html( card_data ) :
 		return poll_html
 
 	#	Photo Card
-	if "summary_large_image" == card_name :
-		card_vanity           = ""
-		card_vanity_html      = ""
+	if "photo" == card_type :
 		card_title            = ""
 		card_title_html       = ""
 		card_description      = ""
@@ -180,29 +177,31 @@ def get_card_html( card_data ) :
 		card_thumbnail_alt    = ""
 		card_url              = ""
 		card_html             = ""
-
-		if "vanity_url" in card_data["binding_values"] :
-			card_vanity = card_data["binding_values"]["vanity_url"]["string_value"]
-			card_vanity_html = f"{card_vanity}<br>"
 		
-		if "title" in card_data["binding_values"] :
-			card_title = card_data["binding_values"]["title"]["string_value"]
+		if "provider_name" in card_data:
+			card_provider = card_data["provider_name"]
+			card_provider_html = f"{card_provider}<br>"
+
+		if "title" in card_data:
+			card_title = card_data["title"]
 			card_title_html = f"{card_title}<br>"
 		
-		if "description" in card_data["binding_values"] :
-			card_description = card_data["binding_values"]["description"]["string_value"]
+		if "description" in card_data :
+			card_description = card_data["description"]
 			card_description_html = f"{card_description}<br>"
 		
-		if "summary_photo_image_alt_text" in card_data["binding_values"] :
-			card_thumbnail_alt = html.escape( card_data["binding_values"]["summary_photo_image_alt_text"]["string_value"] )
+		if "image_description" in card_data :
+			card_thumbnail_alt = html.escape( card_data["image_description"] )
 		
-		if "thumbnail_image" in card_data["binding_values"] :
+		if "image" in card_data :
 			print( "Converting card's thumbnail_image…" )
-			card_thumbnail = card_data["binding_values"]["thumbnail_image"]["image_value"]["url"]
+			card_thumbnail = card_data["image"]
 			#   Convert  media to embedded WebP
 			card_thumbnail = image_to_inline( card_thumbnail )
 			card_thumbnail_html = f'''
-				<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
+				<div class="tweet-embed-media-grid">
+					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
+				</div>
 				'''
 		
 		if "url" in card_data :
@@ -211,7 +210,7 @@ def get_card_html( card_data ) :
 		card_html += f'''
 			<a href="{card_url}" class="tweet-embed-card">
 				{card_thumbnail_html}
-				{card_vanity_html}
+				{card_provider_html}
 				{card_title_html}
 				{card_description_html}
 			</a>
@@ -249,18 +248,17 @@ def mastodon_to_html( mastodon_data ) :
 	user_display      = mastodon_data["account"]["display_name"]
 	user_avatar       = mastodon_data["account"]["avatar"]
 	user_url          = mastodon_data["account"]["url"]
+	user_bot          = (bool)(mastodon_data["account"].get("bot",  False))
 
 
-	# tweet_entities = tweet_data["entities"]
-
-	# #	User labels
-	# if "highlighted_label" in tweet_data["user"] :
-	# 	tweet_label     = html.escape( tweet_data["user"]["highlighted_label"]["description"] )
-	# 	tweet_badge_img = image_to_inline( tweet_data["user"]["highlighted_label"]["badge"]["url"] )
-	# 	print( f"Badge found '{tweet_label}'…")
-	# 	tweet_badge  = f'<br><img src="{tweet_badge_img}" alt="" class="tweet-embed-badge"> {tweet_label}'
-	# else :
-	# 	tweet_badge = ""
+	#	User labels
+	if user_bot :
+		user_label     = "Automated"
+		user_badge_img = "🤖"
+		print( f"Bot found …")
+		user_badge  = f'<br>{user_badge_img} {user_label}'
+	else :
+		user_badge = ""
 
 	#	Get the datetime
 	mastodon_time = parser.parse( mastodon_date )
@@ -288,10 +286,10 @@ def mastodon_to_html( mastodon_data ) :
 	if ( "media_attachments" in mastodon_data ) :
 		mastodon_media = get_media( mastodon_data["media_attachments"] )
 
-	# #	Add card
-	# tweet_card = ""
-	# if "card" in tweet_data :
-	# 	tweet_card = get_card_html( tweet_data["card"] )
+	#	Add card
+	mastodon_card = ""
+	if "card" in mastodon_data :
+		mastodon_card = get_card_html( mastodon_data["card"] )
 
 	#   Convert avatar to embedded WebP
 	print( "Storing avatar…")
@@ -313,7 +311,7 @@ def mastodon_to_html( mastodon_data ) :
 			<a href="{user_url}" class="tweet-embed-user"{schema_url}>
 				<img class="tweet-embed-avatar" src="{user_avatar}" alt=""{schema_image}>
 				<div class="tweet-embed-user-names">
-					<p class="tweet-embed-user-names-name"{schema_name}>{user_name}</p>@{user_display}
+					<p class="tweet-embed-user-names-name"{schema_name}>{user_name}</p>@{user_display}{user_badge}
 				</div>
 			</a>
 			<img class="tweet-embed-logo" alt="Mastodon" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9Ik1hc3RvZG9uIiByb2xlPSJpbWciCnZpZXdCb3g9IjAgMCA1MTIgNTEyIgpmaWxsPSIjZmZmIj48cGF0aApkPSJtMCAwSDUxMlY1MTJIMCIvPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzYzNjRmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzU2M2FjYyIvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGggZmlsbD0idXJsKCNhKSIgZD0iTTMxNyAzODFxLTEyNCAyOC0xMjMtMzkgNjkgMTUgMTQ5IDIgNjctMTMgNzItODAgMy0xMDEtMy0xMTYtMTktNDktNzItNTgtOTgtMTAtMTYyIDAtNTYgMTAtNzUgNTgtMTIgMzEtMyAxNDcgMyAzMiA5IDUzIDEzIDQ2IDcwIDY5IDgzIDIzIDEzOC05Ii8+PHBhdGggZD0iTTM2MCAyOTNoLTM2di05M3EtMS0yNi0yOS0yMy0yMCAzLTIwIDM0djQ3aC0zNnYtNDdxMC0zMS0yMC0zNC0zMC0zLTMwIDI4djg4aC0zNnYtOTFxMS01MSA0NC02MCAzMy01IDUxIDIxbDkgMTUgOS0xNXExNi0yNiA1MS0yMSA0MyA5IDQzIDYwIi8+PC9zdmc+'>
@@ -321,6 +319,7 @@ def mastodon_to_html( mastodon_data ) :
 		<section class="tweet-embed-text"{schema_body}>
 			{mastodon_text}
 			{mastodon_media}
+			{mastodon_card}
 		</section>
 		<hr class="tweet-embed-hr">
 		<footer class="tweet-embed-footer">
