@@ -80,6 +80,8 @@ def get_media( media_attachments) :
 	media_html = '<div class="tweet-embed-media-grid">'
 	#	Iterate through the attached media
 	for media in media_attachments :
+		media_type = media["type"]
+		
 		#	Convert small version of media to embedded WebP
 		print( "Embedding media…" )
 		media_img = image_to_inline( media["preview_url"] )
@@ -87,17 +89,18 @@ def get_media( media_attachments) :
 		#	Find alt text
 		media_alt = ""
 		if "description" in media :
-			media_alt = html.escape( media["description"] )
+			if media["description"] is not None:
+				media_alt = html.escape( media["description"] )
 	
 		#	Is this a video or an image?
-		if "video_info" in media :
+		if "video" == media_type :
 			print( "Video poster…" )
 			#	Embed the poster in the <video>, link to last video which should be highest quality
 			#	TODO! Find a better way to get the best video
 			media_html += f'''
-			<video class='tweet-embed-video' controls src="{media["video_info"]["variants"][-1]["url"]}" poster="{media_img}" width="550"></video>
+			<video class='tweet-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
 			'''
-		else:
+		if "image" in media :
 			#	Embed the image
 			media_html += f'''
 			<a href="{media['url']}" class="tweet-embed-media-link"><img class="tweet-embed-media" alt="{media_alt}" src="{media_img}"></a>
@@ -289,7 +292,8 @@ def mastodon_to_html( mastodon_data ) :
 	#	Add card
 	mastodon_card = ""
 	if "card" in mastodon_data :
-		mastodon_card = get_card_html( mastodon_data["card"] )
+		if mastodon_data["card"] is not None :
+			mastodon_card = get_card_html( mastodon_data["card"] )
 
 	#   Convert avatar to embedded WebP
 	print( "Storing avatar…")
