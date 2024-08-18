@@ -81,7 +81,7 @@ def get_media( media_attachments) :
 	#	Iterate through the attached media
 	for media in media_attachments :
 		media_type = media["type"]
-		
+
 		#	Convert small version of media to embedded WebP
 		print( "Embedding media…" )
 		media_img = image_to_inline( media["preview_url"] )
@@ -100,7 +100,7 @@ def get_media( media_attachments) :
 			media_html += f'''
 			<video class='tweet-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
 			'''
-		if "image" in media :
+		if "image" == media_type :
 			#	Embed the image
 			media_html += f'''
 			<a href="{media['url']}" class="tweet-embed-media-link"><img class="tweet-embed-media" alt="{media_alt}" src="{media_img}"></a>
@@ -350,10 +350,10 @@ for _ in range(5):
 		print( "Retrying…" )
 		continue
 
-# #	If Tweet was deleted, exit.
-# if "TweetTombstone" == data["__typename"] :
-# 	print( "This Post was deleted by the Post author." )
-# 	raise SystemExit
+#	If Post was deleted, exit.
+if "error" in data :
+	print( "This post doesn't exist." )
+	raise SystemExit
 
 #	Turn the Tweet into HTML
 mastodon_html = mastodon_to_html( data )
