@@ -77,7 +77,7 @@ def image_to_inline( url ) :
 	return f'data:image/webp;base64,{base64_utf8_str}'
 
 def get_media( media_attachments) :
-	media_html = '<div class="tweet-embed-media-grid">'
+	media_html = '<div class="mastodon-embed-media-grid">'
 	#	Iterate through the attached media
 	for media in media_attachments :
 		media_type = media["type"]
@@ -98,18 +98,18 @@ def get_media( media_attachments) :
 			#	Embed the poster in the <video>, link to last video which should be highest quality
 			#	TODO! Find a better way to get the best video
 			media_html += f'''
-			<video class='tweet-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
+			<video class='mastodon-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
 			'''
 		if "image" == media_type :
 			#	Embed the image
 			media_html += f'''
-			<a href="{media['url']}" class="tweet-embed-media-link"><img class="tweet-embed-media" alt="{media_alt}" src="{media_img}"></a>
+			<a href="{media['url']}" class="mastodon-embed-media-link"><img class="mastodon-embed-media" alt="{media_alt}" src="{media_img}"></a>
 			'''
 	return media_html + "</div>"
 
 def get_poll_html( poll_data ) :
 	print( "Poll…")
-	poll_html = "<hr class=\"tweet-embed-hr\">"
+	poll_html = "<hr class=\"mastodon-embed-hr\">"
 
 	votes_count = poll_data["votes_count"]
 
@@ -127,7 +127,7 @@ def get_poll_html( poll_data ) :
 		#	Generate semantic HTML
 		poll_html += f'''
 			<label for="poll_{option_counter}">{option_title}: ({option_votes:n})</label><br>
-			<meter class="tweet-embed-meter" id="poll_{option_counter}" min="0" max="100" low="33" high="66" value="{option_percent}">{option_votes}</meter><br>
+			<meter class="mastodon-embed-meter" id="poll_{option_counter}" min="0" max="100" low="33" high="66" value="{option_percent}">{option_votes}</meter><br>
 		'''
 
 		option_counter += 1
@@ -171,8 +171,8 @@ def get_card_html( card_data ) :
 			#   Convert  media to embedded WebP
 			card_thumbnail = image_to_inline( card_thumbnail )
 			card_thumbnail_html = f'''
-				<div class="tweet-embed-media-grid">
-					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
+				<div class="mastodon-embed-media-grid">
+					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="mastodon-embed-media">
 				</div>
 				'''
 		
@@ -180,7 +180,7 @@ def get_card_html( card_data ) :
 			card_url = card_data["url"]
 
 		card_html += f'''
-			<a href="{card_url}" class="tweet-embed-card">
+			<a href="{card_url}" class="mastodon-embed-card">
 				{card_thumbnail_html}
 				{card_provider_html}
 				{card_title_html}
@@ -245,7 +245,7 @@ def mastodon_to_html( mastodon_data ) :
 	# 	else :
 	# 		tweet_reply_link = f'https://twitter.com/{tweet_reply_to}/status/{tweet_reply_id}'
 	# 	tweet_reply = f'''
-	# 		<small class="tweet-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+	# 		<small class="mastodon-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
 	# 	'''
 	# else :
 	# 	tweet_reply = ""
@@ -285,28 +285,28 @@ def mastodon_to_html( mastodon_data ) :
 
 	#   HTML
 	mastodon_html = f'''
-	<blockquote class="tweet-embed" id="tweet-embed-{mastodon_id}" lang="{mastodon_language}"{schema_post}>
-		<header class="tweet-embed-header"{schema_author}>
-			<a href="{user_url}" class="tweet-embed-user"{schema_url}>
-				<img class="tweet-embed-avatar" src="{user_avatar}" alt=""{schema_image}>
-				<div class="tweet-embed-user-names">
-					<p class="tweet-embed-user-names-name"{schema_name}>{user_name}</p>@{user_display}{user_badge}
+	<blockquote class="mastodon-embed" id="mastodon-embed-{mastodon_id}" lang="{mastodon_language}"{schema_post}>
+		<header class="mastodon-embed-header"{schema_author}>
+			<a href="{user_url}" class="mastodon-embed-user"{schema_url}>
+				<img class="mastodon-embed-avatar" src="{user_avatar}" alt=""{schema_image}>
+				<div class="mastodon-embed-user-names">
+					<p class="mastodon-embed-user-names-name"{schema_name}>{user_name}</p>@{user_display}{user_badge}
 				</div>
 			</a>
-			<img class="tweet-embed-logo" alt="Mastodon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-label='Mastodon' role='img' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m0 0H512V512H0'/%3E%3ClinearGradient id='a' y2='1'%3E%3Cstop offset='0' stop-color='%236364ff'/%3E%3Cstop offset='1' stop-color='%23563acc'/%3E%3C/linearGradient%3E%3Cpath fill='url(%23a)' d='M317 381q-124 28-123-39 69 15 149 2 67-13 72-80 3-101-3-116-19-49-72-58-98-10-162 0-56 10-75 58-12 31-3 147 3 32 9 53 13 46 70 69 83 23 138-9'/%3E%3Cpath d='M360 293h-36v-93q-1-26-29-23-20 3-20 34v47h-36v-47q0-31-20-34-30-3-30 28v88h-36v-91q1-51 44-60 33-5 51 21l9 15 9-15q16-26 51-21 43 9 43 60'/%3E%3C/svg%3E" >
+			<img class="mastodon-embed-logo" alt="Mastodon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-label='Mastodon' role='img' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m0 0H512V512H0'/%3E%3ClinearGradient id='a' y2='1'%3E%3Cstop offset='0' stop-color='%236364ff'/%3E%3Cstop offset='1' stop-color='%23563acc'/%3E%3C/linearGradient%3E%3Cpath fill='url(%23a)' d='M317 381q-124 28-123-39 69 15 149 2 67-13 72-80 3-101-3-116-19-49-72-58-98-10-162 0-56 10-75 58-12 31-3 147 3 32 9 53 13 46 70 69 83 23 138-9'/%3E%3Cpath d='M360 293h-36v-93q-1-26-29-23-20 3-20 34v47h-36v-47q0-31-20-34-30-3-30 28v88h-36v-91q1-51 44-60 33-5 51 21l9 15 9-15q16-26 51-21 43 9 43 60'/%3E%3C/svg%3E" >
 		</header>
-		<section class="tweet-embed-text"{schema_body}>
+		<section class="mastodon-embed-text"{schema_body}>
 			{mastodon_text}
 			{mastodon_media}
 			{mastodon_poll}
 			{mastodon_card}
 		</section>
-		<hr class="tweet-embed-hr">
-		<footer class="tweet-embed-footer">
+		<hr class="mastodon-embed-hr">
+		<footer class="mastodon-embed-footer">
 			<a href="{mastodon_url}">
-				<span aria-label="{mastodon_likes} likes" class="tweet-embed-meta">❤️ {mastodon_likes:n}</span>
-				<span aria-label="{mastodon_replies} replies" class="tweet-embed-meta">💬 {mastodon_replies:n}</span>
-				<span aria-label="{mastodon_retweets} reposts" class="tweet-embed-meta">🔁 {mastodon_retweets:n}</span>
+				<span aria-label="{mastodon_likes} likes" class="mastodon-embed-meta">❤️ {mastodon_likes:n}</span>
+				<span aria-label="{mastodon_replies} replies" class="mastodon-embed-meta">💬 {mastodon_replies:n}</span>
+				<span aria-label="{mastodon_retweets} reposts" class="mastodon-embed-meta">🔁 {mastodon_retweets:n}</span>
 				<time datetime="{mastodon_date}"{schema_time}>{mastodon_time}</time>
 			</a>
 		</footer>
@@ -337,29 +337,29 @@ mastodon_html = mastodon_to_html( data )
 #   Generate Content to be pasted
 
 #	CSS
-tweet_css = '''
+mastodon_css = '''
 <style>
-.tweet-embed{
+.mastodon-embed{
 	all:unset;
 	display:block;
 }
-.tweet-embed * {
+.mastodon-embed * {
 	all:unset;
 	display:revert;
 }
-.tweet-embed::after{
+.mastodon-embed::after{
 	all:unset;
 }
-.tweet-embed::before{
+.mastodon-embed::before{
 	all:unset;
 }
 blockquote:not(*){
 	all:unset;
 }
-.tweet-embed a{
+.mastodon-embed a{
 	cursor:pointer;
 }
-blockquote.tweet-embed{
+blockquote.mastodon-embed{
 	box-sizing:border-box;
 	border:.5px solid;
 	width:550px;
@@ -373,69 +373,69 @@ blockquote.tweet-embed{
 	color:#000;
 	display:block;
 }
-.tweet-embed-header{
+.mastodon-embed-header{
 	display:flex;
 	justify-content:space-between;
 }
-.tweet-embed-user{
+.mastodon-embed-user{
 	display:flex;
 	position:relative;
 	align-items:center;
 	text-decoration:none;
 	color:inherit;
 }
-.tweet-embed-avatar{
+.mastodon-embed-avatar{
 	width:3em;
 	height:3em;
 	margin-right:.5em;
 }
-.tweet-embed-avatar-circle{
+.mastodon-embed-avatar-circle{
 	border-radius:50%;
 }
-.tweet-embed-avatar-square{
+.mastodon-embed-avatar-square{
 	border-radius:5%;
 }
-.tweet-embed-user-names-name{
+.mastodon-embed-user-names-name{
 	display:flex;
 	align-items:center;
 	font-weight:bold;
 	margin:0;
 }
-.tweet-embed-text{
+.mastodon-embed-text{
 	margin-top:.5em;
 }
-.tweet-embed-footer a{
+.mastodon-embed-footer a{
 	display:flex;
 	align-items:center;
 	justify-content:space-between;
 }
-.tweet-embed-logo{
+.mastodon-embed-logo{
 	width:3em;
 }
-.tweet-embed-hr{
+.mastodon-embed-hr{
 	border:.1px solid;
 	margin:.5em 0 .5em 0;
 }
-.tweet-embed-meta{
+.mastodon-embed-meta{
 	text-decoration:none !important;
 	color:unset !important;
 }
-.tweet-embed-reply{
+.mastodon-embed-reply{
 	display:block;
 }
-.tweet-embed-text a, .tweet-embed-footer time{
+.mastodon-embed-text a, .mastodon-embed-footer time{
 	color:blue;
 	text-decoration:underline;
 }
-.tweet-embed-media-grid {
+.mastodon-embed-media-grid {
 	display: flex;
 	flex-wrap: wrap;
 }
-.tweet-embed-media-link {
+.mastodon-embed-media-link {
 	flex-grow: 1;
 	width: 50%;
 }
-.tweet-embed-media, .tweet-embed-video {
+.mastodon-embed-media, .mastodon-embed-video {
 	padding: .1em;
 	width: 100%;
 	border-radius:1em;
@@ -443,15 +443,15 @@ blockquote.tweet-embed{
 	object-fit: cover;
 	height: 100%;
 }
-.tweet-embed-reply{
+.mastodon-embed-reply{
 	font-size:.75em;
 	display:block;
 }
-.tweet-embed-meter{
+.mastodon-embed-meter{
 	width:100%;
 	background:#0005;
 }
-.tweet-embed-card{
+.mastodon-embed-card{
 	text-decoration:none !important;
 	color:unset !important;
 	border:.5px solid;
@@ -460,7 +460,7 @@ blockquote.tweet-embed{
 	padding:.5em;
 	border-radius:1em;
 }
-.tweet-embed-badge{
+.mastodon-embed-badge{
 	height:1em;
 	vertical-align: text-top;
 }
@@ -469,7 +469,7 @@ blockquote.tweet-embed{
 
 #	Add the CSS to the output if requsted
 if css_show :
-	mastodon_html = tweet_css + mastodon_html
+	mastodon_html = mastodon_css + mastodon_html
 
 #   Compact the output if necessary
 if not pretty_print :
