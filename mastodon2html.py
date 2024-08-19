@@ -25,6 +25,7 @@ import locale
 locale.setlocale(locale.LC_ALL, '')
 
 #	URl manipulation
+import urllib
 from urllib.parse import urlparse
 
 #   Command line options
@@ -467,18 +468,21 @@ blockquote.mastodon-embed{
 </style>
 '''
 
+#   Compact the output if necessary
+if not pretty_print :
+	print( "Compacting…")
+	mastodon_html = mastodon_html.replace("\n", "").replace("\t", "")
+	mastodon_css  = mastodon_css.replace("\n", "").replace("\t", "")
+	#	Inline CSS
+	mastodon_css = '<link rel="stylesheet" type="text/css" href="data:text/css,' + urllib.parse.quote(mastodon_css) + '">'
+
 #	Add the CSS to the output if requsted
 if css_show :
 	mastodon_html = mastodon_css + mastodon_html
 
-#   Compact the output if necessary
-if not pretty_print :
-	print( "Compacting…")
-	mastodon_html = mastodon_html.replace("\n", "")
-	mastodon_html = mastodon_html.replace("\t", "")
-
 #   Copy to clipboard
 pyperclip.copy( mastodon_html )
+
 #   Print to say we've finished
 print( f"Copied {mastodon_url}" )
 
@@ -487,8 +491,8 @@ if save_file :
 	#   Save directory
 	output_directory = "output"
 	os.makedirs(output_directory, exist_ok = True)
+	#	Make URl filename safe
 	mastodon_file_name = "".join(x for x in mastodon_url if x.isalnum())
-
 	save_location = os.path.join( output_directory, f"{mastodon_file_name}.html" ) 
 	#   Save as HTML file
 	with open( save_location, 'w', encoding="utf-8" ) as html_file:
