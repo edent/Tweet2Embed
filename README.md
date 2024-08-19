@@ -19,7 +19,7 @@ Uses Selenium's Webdriver to launch a Firefox or Chrome instance and takes a scr
 * 🔍 Schema.org metadata
 * 🖼 Cards
 * 📊 Polls
-* ♥ , ♻ & 🗨 counts
+* ♥ , 🔁 & 🗨 counts
 * 📖 Autosubmit the Tweet to Archive.org
 
 ## Usage
@@ -59,7 +59,7 @@ Run `python tweet2html.py -mtp 671919410630819840` and receive:
     <footer class="tweet-embed-footer">
         <a href="https://twitter.com/polls/status/671919410630819840" aria-label="113 likes" class="tweet-embed-meta">❤️ 113</a>
         <a href="https://twitter.com/polls/status/671919410630819840" aria-label="38 replies" class="tweet-embed-meta">💬 38</a>
-        <a href="https://twitter.com/polls/status/671919410630819840" aria-label="0 retweets" class="tweet-embed-meta">♻️ 0</a>			
+        <a href="https://twitter.com/polls/status/671919410630819840" aria-label="0 retweets" class="tweet-embed-meta">🔁 0</a>			
         <a href="https://twitter.com/polls/status/671919410630819840"><time datetime="2015-12-02T05:10:45.000Z" itemprop="datePublished">05:10 - Wed 02 December 2015</time></a>
     </footer>
 </blockquote>
