@@ -77,6 +77,16 @@ def image_to_inline( url ) :
 	#	Return as data encoded suitable for an <img src="...">
 	return f'data:image/webp;base64,{base64_utf8_str}'
 
+def mastodon_emojis( mastodon_text, emojis ) :
+	for emoji in emojis:
+		shortcode = emoji["shortcode"]
+		url	      = emoji["url"]
+		emoji_img = image_to_inline( url )
+		emoji_img_html = f'<img src="{emoji_img}" alt=":{shortcode}:" class="mastodon-embed-emoji">'
+		mastodon_text = mastodon_text.replace( f":{shortcode}:", emoji_img_html )
+	return mastodon_text
+
+
 def get_media( media_attachments) :
 	media_html = '<div class="mastodon-embed-media-grid">'
 	#	Iterate through the attached media
@@ -223,7 +233,6 @@ def mastodon_to_html( mastodon_data ) :
 	user_url          = mastodon_data["account"]["url"]
 	user_bot          = (bool)(mastodon_data["account"].get("bot",  False))
 
-
 	#	User labels
 	if user_bot :
 		user_label     = "Automated"
@@ -254,10 +263,16 @@ def mastodon_to_html( mastodon_data ) :
 	# #   Embed entities
 	# tweet_text = tweet_entities_to_html( tweet_text, tweet_entities )
 
+	#	Add shortcode emoji to text
+	if "emojis" in mastodon_data :
+		if mastodon_data["emojis"] is not None :
+			mastodon_text = mastodon_emojis( mastodon_text, mastodon_data["emojis"] )
+
 	#	Add media
 	mastodon_media = ""
 	if ( "media_attachments" in mastodon_data ) :
-		mastodon_media = get_media( mastodon_data["media_attachments"] )
+		if mastodon_data["media_attachments"] is not None :
+			mastodon_media = get_media( mastodon_data["media_attachments"] )
 
 	#	Add card
 	mastodon_card = ""
@@ -464,6 +479,13 @@ blockquote.mastodon-embed{
 .mastodon-embed-badge{
 	height:1em;
 	vertical-align: text-top;
+}
+.mastodon-embed-text p {
+	margin-bottom:1em;
+}
+.mastodon-embed-emoji{
+	display:inline;
+	width:1em;
 }
 </style>
 '''
