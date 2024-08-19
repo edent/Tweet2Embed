@@ -306,7 +306,7 @@ def mastodon_to_html( mastodon_data ) :
 			<a href="{mastodon_url}">
 				<span aria-label="{mastodon_likes} likes" class="tweet-embed-meta">❤️ {mastodon_likes:n}</span>
 				<span aria-label="{mastodon_replies} replies" class="tweet-embed-meta">💬 {mastodon_replies:n}</span>
-				<span aria-label="{mastodon_retweets} reposts" class="tweet-embed-meta">♻️ {mastodon_retweets:n}</span>
+				<span aria-label="{mastodon_retweets} reposts" class="tweet-embed-meta">🔁 {mastodon_retweets:n}</span>
 				<time datetime="{mastodon_date}"{schema_time}>{mastodon_time}</time>
 			</a>
 		</footer>
