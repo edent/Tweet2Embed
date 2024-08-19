@@ -408,7 +408,7 @@ def tweet_to_html( tweet_data ) :
 		<footer class="tweet-embed-footer">
 			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes:n}</a>
 			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-meta">💬 {tweet_replies:n}</a>
-			<a href="{tweet_url}" aria-label="{tweet_retweets} retweets" class="tweet-embed-meta">♻️ {tweet_retweets:n}</a>			
+			<a href="{tweet_url}" aria-label="{tweet_retweets} retweets" class="tweet-embed-meta">🔁 {tweet_retweets:n}</a>			
 			<a href="{tweet_url}"><time datetime="{tweet_date}"{schema_time}>{tweet_time}</time></a>
 		</footer>
 	</blockquote>
