@@ -384,7 +384,7 @@ blockquote.mastodon-embed{
 	margin:auto;
 	margin-bottom:.5em;
 	padding:1em;
-	border-radius:1em;
+	border-radius:.5em;
 	background-color:#FFF;
 	color:#000;
 	display:block;
@@ -454,7 +454,7 @@ blockquote.mastodon-embed{
 .mastodon-embed-media, .mastodon-embed-video {
 	padding: .1em;
 	width: 100%;
-	border-radius:1em;
+	border-radius:.5em;
 	max-width:100%;
 	object-fit: cover;
 	height: 100%;
@@ -474,7 +474,7 @@ blockquote.mastodon-embed{
 	display:block;
 	font-size:.85em;
 	padding:.5em;
-	border-radius:1em;
+	border-radius:.5em;
 }
 .mastodon-embed-badge{
 	height:1em;
