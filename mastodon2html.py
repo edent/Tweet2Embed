@@ -150,7 +150,7 @@ def get_card_html( card_data ) :
 	print( "Card of type " + card_type )
 
 	#	Photo Card
-	if "photo" == card_type :
+	if "photo" == card_type or "link" == card_type :
 		card_title            = ""
 		card_title_html       = ""
 		card_description      = ""
