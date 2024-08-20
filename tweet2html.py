@@ -475,6 +475,7 @@ blockquote.tweet-embed{
 	background-color:#FFF;
 	color:#000;
 	display:block;
+	white-space: normal;
 }
 .tweet-embed-header{
 	display:flex;

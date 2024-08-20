@@ -388,6 +388,7 @@ blockquote.mastodon-embed{
 	background-color:#FFF;
 	color:#000;
 	display:block;
+	white-space: normal;
 }
 .mastodon-embed-header{
 	display:flex;
