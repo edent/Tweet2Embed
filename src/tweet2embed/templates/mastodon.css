@@ -1,0 +1,133 @@
+.mastodon-embed{
+    all:unset;
+    display:block;
+}
+.mastodon-embed * {
+    all:unset;
+    display:revert;
+}
+.mastodon-embed::after{
+    all:unset;
+}
+.mastodon-embed::before{
+    all:unset;
+}
+blockquote:not(*){
+    all:unset;
+}
+.mastodon-embed a{
+    cursor:pointer;
+}
+blockquote.mastodon-embed{
+    box-sizing:border-box;
+    border:.5px solid;
+    width:550px;
+    max-width:100%;
+    font-family:sans-serif;
+    margin:auto;
+    margin-bottom:.5em;
+    padding:1em;
+    border-radius:.5em;
+    background-color:#FFF;
+    color:#000;
+    display:block;
+    white-space: normal;
+}
+.mastodon-embed-header{
+    display:flex;
+    justify-content:space-between;
+}
+.mastodon-embed-user{
+    display:flex;
+    position:relative;
+    align-items:center;
+    text-decoration:none;
+    color:inherit;
+}
+.mastodon-embed-avatar{
+    width:3em;
+    height:3em;
+    margin-right:.5em;
+}
+.mastodon-embed-avatar-circle{
+    border-radius:50%;
+}
+.mastodon-embed-avatar-square{
+    border-radius:5%;
+}
+.mastodon-embed-user-names-name{
+    display:flex;
+    align-items:center;
+    font-weight:bold;
+    margin:0;
+}
+.mastodon-embed-text{
+    margin-top:.5em;
+}
+.mastodon-embed-footer a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+.mastodon-embed-logo{
+    width:3em;
+}
+.mastodon-embed-hr{
+    border:.1px solid;
+    margin:.5em 0 .5em 0;
+}
+.mastodon-embed-meta{
+    text-decoration:none !important;
+    color:unset !important;
+}
+.mastodon-embed-reply{
+    display:block;
+}
+.mastodon-embed-text a, .mastodon-embed-footer time{
+    color:blue;
+    text-decoration:underline;
+}
+.mastodon-embed-media-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+.mastodon-embed-media-link {
+    flex-grow: 1;
+    width: 50%;
+}
+.mastodon-embed-media, .mastodon-embed-video {
+    padding: .1em;
+    width: 100%;
+    border-radius:.5em;
+    max-width:100%;
+    object-fit: cover;
+    height: 100%;
+}
+.mastodon-embed-reply{
+    font-size:.75em;
+    display:block;
+}
+.mastodon-embed-meter{
+    width:100%;
+    background:#0005;
+}
+.mastodon-embed-card{
+    text-decoration:none !important;
+    color:unset !important;
+    border:.5px solid;
+    display:block;
+    font-size:.85em;
+    padding:.5em;
+    border-radius:.5em;
+}
+.mastodon-embed-badge{
+    height:1em;
+    vertical-align: text-top;
+}
+.mastodon-embed-text p {
+    margin-bottom:1em;
+}
+.mastodon-embed-emoji{
+    display:inline;
+    width:1em;
+}

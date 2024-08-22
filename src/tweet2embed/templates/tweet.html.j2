@@ -1,0 +1,42 @@
+{% if css_show %}
+<style>
+    {% include 'tweet.css.j2' %}
+</style>
+{% endif %}
+<blockquote class="tweet-embed" id="tweet-embed-{{ tweet_id }}" lang="{{ tweet_lang }}" {% if schema_org %} itemscope
+    itemtype="https://schema.org/SocialMediaPosting" {% endif %}>
+    {{ tweet_parent }}
+    <header class="tweet-embed-header" {% if schema_org %} itemprop="author" itemscope
+        itemtype="https://schema.org/Person" {% endif %}>
+        <a href="https://twitter.com/{{ tweet_user }}" class="tweet-embed-user" {% if schema_org %} itemprop="url"
+            {% endif %}>
+            <img class="tweet-embed-avatar {% if tweet_shape == 'Square' %}tweet-embed-avatar-square{% else %}tweet-embed-avatar-circle{% endif %}"
+                src="{{ tweet_avatar }}" alt="" {% if schema_org %} itemprop="image" {% endif %}>
+            <div class="tweet-embed-user-names">
+                <p class="tweet-embed-user-names-name" {% if schema_org %} itemprop="name" {% endif %}>{{ tweet_name }}
+                </p>
+                @{{ tweet_user }}{{ tweet_badge }}
+            </div>
+        </a>
+        <img class="tweet-embed-logo" alt=""
+            src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
+    </header>
+    <section class="tweet-embed-text" {% if schema_org %}itemprop="articleBody" {% endif %}>
+        {{ tweet_reply }}
+        {{ tweet_text }}
+        {{ tweet_media }}
+        {{ tweet_card }}
+        {{ tweet_quote }}
+    </section>
+    <hr class="tweet-embed-hr">
+    <footer class="tweet-embed-footer">
+        <a href="{{ tweet_url }}" aria-label="{{ tweet_likes }} likes" class="tweet-embed-meta">❤️
+            {{ "{:n}".format(tweet_likes) }}</a>
+        <a href="{{ tweet_url }}" aria-label="{{ tweet_replies }} replies" class="tweet-embed-meta">💬
+            {{ "{:n}".format(tweet_replies) }}</a>
+        <a href="{{ tweet_url }}" aria-label="{{ tweet_retweets }} retweets" class="tweet-embed-meta">🔁
+            {{ "{:n}".format(tweet_retweets) }}</a>
+        <a href="{{ tweet_url }}"><time datetime="{{ tweet_date }}" {% if schema_org %} itemprop="datePublished"
+                {% endif %}>{{ tweet_time }}</time></a>
+    </footer>
+</blockquote>
