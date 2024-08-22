@@ -545,7 +545,6 @@ blockquote.tweet-embed{
 	border-radius:1em;
 	max-width:100%;
 	object-fit: cover;
-	height: 100%;
 }
 .tweet-embed-reply{
 	font-size:.75em;
