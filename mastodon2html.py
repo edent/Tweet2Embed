@@ -82,13 +82,13 @@ def mastodon_emojis( mastodon_text, emojis ) :
 		shortcode = emoji["shortcode"]
 		url	      = emoji["url"]
 		emoji_img = image_to_inline( url )
-		emoji_img_html = f'<img src="{emoji_img}" alt=":{shortcode}:" class="mastodon-embed-emoji">'
+		emoji_img_html = f'<img src="{emoji_img}" alt=":{shortcode}:" class="social-embed-emoji">'
 		mastodon_text = mastodon_text.replace( f":{shortcode}:", emoji_img_html )
 	return mastodon_text
 
 
 def get_media( media_attachments) :
-	media_html = '<div class="mastodon-embed-media-grid">'
+	media_html = '<div class="social-embed-media-grid">'
 	#	Iterate through the attached media
 	for media in media_attachments :
 		media_type = media["type"]
@@ -109,18 +109,18 @@ def get_media( media_attachments) :
 			#	Embed the poster in the <video>, link to last video which should be highest quality
 			#	TODO! Find a better way to get the best video
 			media_html += f'''
-			<video class='mastodon-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
+			<video class='social-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
 			'''
 		if "image" == media_type :
 			#	Embed the image
 			media_html += f'''
-			<a href="{media['url']}" class="mastodon-embed-media-link"><img class="mastodon-embed-media" alt="{media_alt}" src="{media_img}"></a>
+			<a href="{media['url']}" class="social-embed-media-link"><img class="social-embed-media" alt="{media_alt}" src="{media_img}"></a>
 			'''
 	return media_html + "</div>"
 
 def get_poll_html( poll_data ) :
 	print( "Poll…")
-	poll_html = "<hr class=\"mastodon-embed-hr\">"
+	poll_html = "<hr class=\"social-embed-hr\">"
 
 	votes_count = poll_data["votes_count"]
 
@@ -138,7 +138,7 @@ def get_poll_html( poll_data ) :
 		#	Generate semantic HTML
 		poll_html += f'''
 			<label for="poll_{option_counter}">{option_title}: ({option_votes:n})</label><br>
-			<meter class="mastodon-embed-meter" id="poll_{option_counter}" min="0" max="100" low="33" high="66" value="{option_percent}">{option_votes}</meter><br>
+			<meter class="social-embed-meter" id="poll_{option_counter}" min="0" max="100" low="33" high="66" value="{option_percent}">{option_votes}</meter><br>
 		'''
 
 		option_counter += 1
@@ -182,8 +182,8 @@ def get_card_html( card_data ) :
 			#   Convert  media to embedded WebP
 			card_thumbnail = image_to_inline( card_thumbnail )
 			card_thumbnail_html = f'''
-				<div class="mastodon-embed-media-grid">
-					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="mastodon-embed-media">
+				<div class="social-embed-media-grid">
+					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="social-embed-media">
 				</div>
 				'''
 		
@@ -191,7 +191,7 @@ def get_card_html( card_data ) :
 			card_url = card_data["url"]
 
 		card_html += f'''
-			<a href="{card_url}" class="mastodon-embed-card">
+			<a href="{card_url}" class="social-embed-card">
 				{card_thumbnail_html}
 				{card_provider_html}
 				{card_title_html}
@@ -255,7 +255,7 @@ def mastodon_to_html( mastodon_data ) :
 	# 	else :
 	# 		tweet_reply_link = f'https://twitter.com/{tweet_reply_to}/status/{tweet_reply_id}'
 	# 	tweet_reply = f'''
-	# 		<small class="mastodon-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+	# 		<small class="social-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
 	# 	'''
 	# else :
 	# 	tweet_reply = ""
@@ -301,28 +301,28 @@ def mastodon_to_html( mastodon_data ) :
 
 	#   HTML
 	mastodon_html = f'''
-	<blockquote class="mastodon-embed" id="mastodon-embed-{mastodon_id}" lang="{mastodon_language}"{schema_post}>
-		<header class="mastodon-embed-header"{schema_author}>
-			<a href="{user_url}" class="mastodon-embed-user"{schema_url}>
-				<img class="mastodon-embed-avatar" src="{user_avatar}" alt=""{schema_image}>
-				<div class="mastodon-embed-user-names">
-					<p class="mastodon-embed-user-names-name"{schema_name}>{user_name}</p>@{user_display}{user_badge}
+	<blockquote class="social-embed" id="social-embed-{mastodon_id}" lang="{mastodon_language}"{schema_post}>
+		<header class="social-embed-header"{schema_author}>
+			<a href="{user_url}" class="social-embed-user"{schema_url}>
+				<img class="social-embed-avatar" src="{user_avatar}" alt=""{schema_image}>
+				<div class="social-embed-user-names">
+					<p class="social-embed-user-names-name"{schema_name}>{user_name}</p>@{user_display}{user_badge}
 				</div>
 			</a>
-			<img class="mastodon-embed-logo" alt="Mastodon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-label='Mastodon' role='img' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m0 0H512V512H0'/%3E%3ClinearGradient id='a' y2='1'%3E%3Cstop offset='0' stop-color='%236364ff'/%3E%3Cstop offset='1' stop-color='%23563acc'/%3E%3C/linearGradient%3E%3Cpath fill='url(%23a)' d='M317 381q-124 28-123-39 69 15 149 2 67-13 72-80 3-101-3-116-19-49-72-58-98-10-162 0-56 10-75 58-12 31-3 147 3 32 9 53 13 46 70 69 83 23 138-9'/%3E%3Cpath d='M360 293h-36v-93q-1-26-29-23-20 3-20 34v47h-36v-47q0-31-20-34-30-3-30 28v88h-36v-91q1-51 44-60 33-5 51 21l9 15 9-15q16-26 51-21 43 9 43 60'/%3E%3C/svg%3E" >
+			<img class="social-embed-logo" alt="Mastodon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-label='Mastodon' role='img' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m0 0H512V512H0'/%3E%3ClinearGradient id='a' y2='1'%3E%3Cstop offset='0' stop-color='%236364ff'/%3E%3Cstop offset='1' stop-color='%23563acc'/%3E%3C/linearGradient%3E%3Cpath fill='url(%23a)' d='M317 381q-124 28-123-39 69 15 149 2 67-13 72-80 3-101-3-116-19-49-72-58-98-10-162 0-56 10-75 58-12 31-3 147 3 32 9 53 13 46 70 69 83 23 138-9'/%3E%3Cpath d='M360 293h-36v-93q-1-26-29-23-20 3-20 34v47h-36v-47q0-31-20-34-30-3-30 28v88h-36v-91q1-51 44-60 33-5 51 21l9 15 9-15q16-26 51-21 43 9 43 60'/%3E%3C/svg%3E" >
 		</header>
-		<section class="mastodon-embed-text"{schema_body}>
+		<section class="social-embed-text"{schema_body}>
 			{mastodon_text}
 			{mastodon_media}
 			{mastodon_poll}
 			{mastodon_card}
 		</section>
-		<hr class="mastodon-embed-hr">
-		<footer class="mastodon-embed-footer">
+		<hr class="social-embed-hr">
+		<footer class="social-embed-footer">
 			<a href="{mastodon_url}">
-				<span aria-label="{mastodon_likes} likes" class="mastodon-embed-meta">❤️ {mastodon_likes:n}</span>
-				<span aria-label="{mastodon_replies} replies" class="mastodon-embed-meta">💬 {mastodon_replies:n}</span>
-				<span aria-label="{mastodon_retweets} reposts" class="mastodon-embed-meta">🔁 {mastodon_retweets:n}</span>
+				<span aria-label="{mastodon_likes} likes" class="social-embed-meta">❤️ {mastodon_likes:n}</span>
+				<span aria-label="{mastodon_replies} replies" class="social-embed-meta">💬 {mastodon_replies:n}</span>
+				<span aria-label="{mastodon_retweets} reposts" class="social-embed-meta">🔁 {mastodon_retweets:n}</span>
 				<time datetime="{mastodon_date}"{schema_time}>{mastodon_time}</time>
 			</a>
 		</footer>
@@ -355,27 +355,27 @@ mastodon_html = mastodon_to_html( data )
 #	CSS
 mastodon_css = '''
 <style>
-.mastodon-embed{
+.social-embed{
 	all:unset;
 	display:block;
 }
-.mastodon-embed * {
+.social-embed * {
 	all:unset;
 	display:revert;
 }
-.mastodon-embed::after{
+.social-embed::after{
 	all:unset;
 }
-.mastodon-embed::before{
+.social-embed::before{
 	all:unset;
 }
 blockquote:not(*){
 	all:unset;
 }
-.mastodon-embed a{
+.social-embed a{
 	cursor:pointer;
 }
-blockquote.mastodon-embed{
+blockquote.social-embed{
 	box-sizing:border-box;
 	border:.5px solid;
 	width:550px;
@@ -390,69 +390,69 @@ blockquote.mastodon-embed{
 	display:block;
 	white-space: normal;
 }
-.mastodon-embed-header{
+.social-embed-header{
 	display:flex;
 	justify-content:space-between;
 }
-.mastodon-embed-user{
+.social-embed-user{
 	display:flex;
 	position:relative;
 	align-items:center;
 	text-decoration:none;
 	color:inherit;
 }
-.mastodon-embed-avatar{
+.social-embed-avatar{
 	width:3em;
 	height:3em;
 	margin-right:.5em;
 }
-.mastodon-embed-avatar-circle{
+.social-embed-avatar-circle{
 	border-radius:50%;
 }
-.mastodon-embed-avatar-square{
+.social-embed-avatar-square{
 	border-radius:5%;
 }
-.mastodon-embed-user-names-name{
+.social-embed-user-names-name{
 	display:flex;
 	align-items:center;
 	font-weight:bold;
 	margin:0;
 }
-.mastodon-embed-text{
+.social-embed-text{
 	margin-top:.5em;
 }
-.mastodon-embed-footer a{
+.social-embed-footer a{
 	display:flex;
 	align-items:center;
 	justify-content:space-between;
 }
-.mastodon-embed-logo{
+.social-embed-logo{
 	width:3em;
 }
-.mastodon-embed-hr{
+.social-embed-hr{
 	border:.1px solid;
 	margin:.5em 0 .5em 0;
 }
-.mastodon-embed-meta{
+.social-embed-meta{
 	text-decoration:none !important;
 	color:unset !important;
 }
-.mastodon-embed-reply{
+.social-embed-reply{
 	display:block;
 }
-.mastodon-embed-text a, .mastodon-embed-footer time{
+.social-embed-text a, .social-embed-footer time{
 	color:blue;
 	text-decoration:underline;
 }
-.mastodon-embed-media-grid {
+.social-embed-media-grid {
 	display: flex;
 	flex-wrap: wrap;
 }
-.mastodon-embed-media-link {
+.social-embed-media-link {
 	flex-grow: 1;
 	width: 50%;
 }
-.mastodon-embed-media, .mastodon-embed-video {
+.social-embed-media, .social-embed-video {
 	padding: .1em;
 	width: 100%;
 	border-radius:.5em;
@@ -460,15 +460,15 @@ blockquote.mastodon-embed{
 	object-fit: cover;
 	height: 100%;
 }
-.mastodon-embed-reply{
+.social-embed-reply{
 	font-size:.75em;
 	display:block;
 }
-.mastodon-embed-meter{
+.social-embed-meter{
 	width:100%;
 	background:#0005;
 }
-.mastodon-embed-card{
+.social-embed-card{
 	text-decoration:none !important;
 	color:unset !important;
 	border:.5px solid;
@@ -477,14 +477,14 @@ blockquote.mastodon-embed{
 	padding:.5em;
 	border-radius:.5em;
 }
-.mastodon-embed-badge{
+.social-embed-badge{
 	height:1em;
 	vertical-align: text-top;
 }
-.mastodon-embed-text p {
+.social-embed-text p {
 	margin-bottom:1em;
 }
-.mastodon-embed-emoji{
+.social-embed-emoji{
 	display:inline;
 	width:1em;
 }
