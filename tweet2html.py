@@ -147,7 +147,7 @@ def tweet_entities_to_html(text, entities):
 	return ''.join(html_parts)
 
 def get_media( mediaDetails) :
-	media_html = '<div class="tweet-embed-media-grid">'
+	media_html = '<div class="social-embed-media-grid">'
 	#	Iterate through the attached media
 	for media in mediaDetails :
 		#	Convert small version of media to embedded WebP
@@ -165,12 +165,12 @@ def get_media( mediaDetails) :
 			#	Embed the poster in the <video>, link to last video which should be highest quality
 			#	TODO! Find a better way to get the best video
 			media_html += f'''
-			<video class='tweet-embed-video' controls src="{media["video_info"]["variants"][-1]["url"]}" poster="{media_img}" width="550"></video>
+			<video class='social-embed-video' controls src="{media["video_info"]["variants"][-1]["url"]}" poster="{media_img}" width="550"></video>
 			'''
 		else:
 			#	Embed the image
 			media_html += f'''
-			<a href="{media['media_url_https']}" class="tweet-embed-media-link"><img class="tweet-embed-media" alt="{media_alt}" src="{media_img}"></a>
+			<a href="{media['media_url_https']}" class="social-embed-media-link"><img class="social-embed-media" alt="{media_alt}" src="{media_img}"></a>
 			'''
 	return media_html + "</div>"
 
@@ -216,24 +216,24 @@ def get_card_html( card_data ) :
 		#	Generate semantic HTML
 		if poll_1_label != "" :
 			poll_html += f'''
-				<hr class="tweet-embed-hr">
+				<hr class="social-embed-hr">
 				<label for="poll_1_count">{poll_1_label}: ({poll_1_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_1_count" min="0" max="100" low="33" high="66" value="{poll_1_percent}">{poll_1_count}</meter><br>
+				<meter class="social-embed-meter" id="poll_1_count" min="0" max="100" low="33" high="66" value="{poll_1_percent}">{poll_1_count}</meter><br>
 			'''
 		if poll_2_label != "" :
 			poll_html += f'''
 				<label for="poll_2_count">{poll_2_label}: ({poll_2_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_2_count" min="0" max="100" low="33" high="66" value="{poll_2_percent}">{poll_2_count}</meter><br>
+				<meter class="social-embed-meter" id="poll_2_count" min="0" max="100" low="33" high="66" value="{poll_2_percent}">{poll_2_count}</meter><br>
 			'''
 		if poll_3_label != "" :
 			poll_html += f'''
 				<label for="poll_3_count">{poll_3_label}: ({poll_3_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_3_count" min="0" max="100" low="33" high="66" value="{poll_3_percent}">{poll_3_count}</meter><br>
+				<meter class="social-embed-meter" id="poll_3_count" min="0" max="100" low="33" high="66" value="{poll_3_percent}">{poll_3_count}</meter><br>
 			'''
 		if poll_4_label != "" :
 			poll_html += f'''
 				<label for="poll_4_count">{poll_4_label}: ({poll_4_count:n})</label><br>
-				<meter class="tweet-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
+				<meter class="social-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
 			'''
 		return poll_html
 
@@ -272,14 +272,14 @@ def get_card_html( card_data ) :
 			#   Convert  media to embedded WebP
 			card_thumbnail = image_to_inline( card_thumbnail )
 			card_thumbnail_html = f'''
-				<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
+				<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="social-embed-media">
 				'''
 		
 		if "url" in card_data :
 			card_url = card_data["url"]
 
 		card_html += f'''
-			<a href="{card_url}" class="tweet-embed-card">
+			<a href="{card_url}" class="social-embed-card">
 				{card_thumbnail_html}
 				{card_vanity_html}
 				{card_title_html}
@@ -325,7 +325,7 @@ def tweet_to_html( tweet_data ) :
 		tweet_label     = html.escape( tweet_data["user"]["highlighted_label"]["description"] )
 		tweet_badge_img = image_to_inline( tweet_data["user"]["highlighted_label"]["badge"]["url"] )
 		print( f"Badge found '{tweet_label}'…")
-		tweet_badge  = f'<br><img src="{tweet_badge_img}" alt="" class="tweet-embed-badge"> {tweet_label}'
+		tweet_badge  = f'<br><img src="{tweet_badge_img}" alt="" class="social-embed-badge"> {tweet_label}'
 	else :
 		tweet_badge = ""
 
@@ -342,7 +342,7 @@ def tweet_to_html( tweet_data ) :
 		else :
 			tweet_reply_link = f'https://twitter.com/{tweet_reply_to}/status/{tweet_reply_id}'
 		tweet_reply = f'''
-			<small class="tweet-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+			<small class="social-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
 		'''
 	else :
 		tweet_reply = ""
@@ -369,11 +369,11 @@ def tweet_to_html( tweet_data ) :
 
 	#	Avatar shape
 	if tweet_shape == "Circle" :
-		avatar_shape = "tweet-embed-avatar-circle"
+		avatar_shape = "social-embed-avatar-circle"
 	elif tweet_shape == "Square" :
-		avatar_shape = "tweet-embed-avatar-square"
+		avatar_shape = "social-embed-avatar-square"
 	else :
-		avatar_shape = "tweet-embed-avatar-circle"
+		avatar_shape = "social-embed-avatar-circle"
 
 	#	Schema.org metadata
 	schema_post   = ' itemscope itemtype="https://schema.org/SocialMediaPosting"'       if schema_org else ""
@@ -386,29 +386,29 @@ def tweet_to_html( tweet_data ) :
 
 	#   HTML
 	tweet_html = f'''
-	<blockquote class="tweet-embed" id="tweet-embed-{tweet_id}" lang="{tweet_lang}"{schema_post}>
+	<blockquote class="social-embed" id="social-embed-{tweet_id}" lang="{tweet_lang}"{schema_post}>
 		{tweet_parent}
-		<header class="tweet-embed-header"{schema_author}>
-			<a href="https://twitter.com/{tweet_user}" class="tweet-embed-user"{schema_url}>
-				<img class="tweet-embed-avatar {avatar_shape}" src="{tweet_avatar}" alt=""{schema_image}>
-				<div class="tweet-embed-user-names">
-					<p class="tweet-embed-user-names-name"{schema_name}>{tweet_name}</p>@{tweet_user}{tweet_badge}
+		<header class="social-embed-header"{schema_author}>
+			<a href="https://twitter.com/{tweet_user}" class="social-embed-user"{schema_url}>
+				<img class="social-embed-avatar {avatar_shape}" src="{tweet_avatar}" alt=""{schema_image}>
+				<div class="social-embed-user-names">
+					<p class="social-embed-user-names-name"{schema_name}>{tweet_name}</p>@{tweet_user}{tweet_badge}
 				</div>
 			</a>
-			<img class="tweet-embed-logo" alt="" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
+			<img class="social-embed-logo" alt="" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
 		</header>
-		<section class="tweet-embed-text"{schema_body}>
+		<section class="social-embed-text"{schema_body}>
 			{tweet_reply}
 			{tweet_text}
 			{tweet_media}
 			{tweet_card}
 			{tweet_quote}
 		</section>
-		<hr class="tweet-embed-hr">
-		<footer class="tweet-embed-footer">
-			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="tweet-embed-meta">❤️ {tweet_likes:n}</a>
-			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="tweet-embed-meta">💬 {tweet_replies:n}</a>
-			<a href="{tweet_url}" aria-label="{tweet_retweets} retweets" class="tweet-embed-meta">🔁 {tweet_retweets:n}</a>			
+		<hr class="social-embed-hr">
+		<footer class="social-embed-footer">
+			<a href="{tweet_url}" aria-label="{tweet_likes} likes" class="social-embed-meta">❤️ {tweet_likes:n}</a>
+			<a href="{tweet_url}" aria-label="{tweet_replies} replies" class="social-embed-meta">💬 {tweet_replies:n}</a>
+			<a href="{tweet_url}" aria-label="{tweet_retweets} retweets" class="social-embed-meta">🔁 {tweet_retweets:n}</a>			
 			<a href="{tweet_url}"><time datetime="{tweet_date}"{schema_time}>{tweet_time}</time></a>
 		</footer>
 	</blockquote>
@@ -442,130 +442,165 @@ tweet_html = tweet_to_html(data)
 #	CSS
 tweet_css = '''
 <style>
-.tweet-embed{
-	all:unset;
-	display:block;
+.social-embed {
+	all: unset;
+	display: block;
 }
-.tweet-embed * {
-	all:unset;
-	display:revert;
+
+.social-embed * {
+	all: unset;
+	display: revert;
 }
-.tweet-embed::after{
-	all:unset;
+
+.social-embed::after {
+	all: unset;
 }
-.tweet-embed::before{
-	all:unset;
+
+.social-embed::before {
+	all: unset;
 }
-blockquote:not(*){
-	all:unset;
+
+blockquote:not(*) {
+	all: unset;
 }
-.tweet-embed a{
-	cursor:pointer;
+
+.social-embed a {
+	cursor: pointer;
 }
-blockquote.tweet-embed{
-	box-sizing:border-box;
-	border:.5px solid;
-	width:550px;
-	max-width:100%;
-	font-family:sans-serif;
-	margin:auto;
-	margin-bottom:.5em;
-	padding:1em;
-	border-radius:1em;
-	background-color:#FFF;
-	color:#000;
-	display:block;
+
+blockquote.social-embed {
+	box-sizing: border-box;
+	border: .5px solid;
+	width: 550px;
+	max-width: 100%;
+	font-family: sans-serif;
+	margin: auto;
+	margin-bottom: .5em;
+	padding: 1em;
+	border-radius: .5em;
+	background-color: #FFF;
+	color: #000;
+	display: block;
 	white-space: normal;
 }
-.tweet-embed-header{
-	display:flex;
-	justify-content:space-between;
+
+.social-embed-header {
+	display: flex;
+	justify-content: space-between;
 }
-.tweet-embed-user{
-	display:flex;
-	position:relative;
-	align-items:center;
-	text-decoration:none;
-	color:inherit;
+
+.social-embed-user {
+	display: flex;
+	position: relative;
+	align-items: center;
+	text-decoration: none;
+	color: inherit;
 }
-.tweet-embed-avatar{
-	width:3em;
-	height:3em;
-	margin-right:.5em;
+
+.social-embed-avatar {
+	width: 3em;
+	height: 3em;
+	margin-right: .5em;
 }
-.tweet-embed-avatar-circle{
-	border-radius:50%;
+
+.social-embed-avatar-circle {
+	border-radius: 50%;
 }
-.tweet-embed-avatar-square{
-	border-radius:5%;
+
+.social-embed-avatar-square {
+	border-radius: 5%;
 }
-.tweet-embed-user-names-name{
-	display:flex;
-	align-items:center;
-	font-weight:bold;
-	margin:0;
+
+.social-embed-user-names-name {
+	display: flex;
+	align-items: center;
+	font-weight: bold;
+	margin: 0;
 }
-.tweet-embed-text{
-	margin-top:.5em;
+
+.social-embed-text {
+	margin-top: .5em;
 }
-.tweet-embed-footer{
-	display:flex;
-	align-items:center;
-	justify-content:space-between;
+
+.social-embed-footer a {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
-.tweet-embed-logo{
-	width:3em;
+
+.social-embed-logo {
+	width: 3em;
 }
-.tweet-embed-hr{
-	border:.1px solid;
-	margin:.5em 0 .5em 0;
+
+.social-embed-hr {
+	border: .1px solid;
+	margin: .5em 0 .5em 0;
 }
-.tweet-embed-meta{
-	text-decoration:none !important;
-	color:unset !important;
+
+.social-embed-meta {
+	text-decoration: none !important;
+	color: unset !important;
 }
-.tweet-embed-reply{
-	display:block;
+
+.social-embed-reply {
+	display: block;
 }
-.tweet-embed-text a, .tweet-embed-footer time{
-	color:blue;
-	text-decoration:underline;
+
+.social-embed-text a, .social-embed-footer time {
+	color: blue;
+	text-decoration: underline;
 }
-.tweet-embed-media-grid {
+
+.social-embed-media-grid {
 	display: flex;
 	flex-wrap: wrap;
 }
-.tweet-embed-media-link {
+
+.social-embed-media-link {
 	flex-grow: 1;
 	width: 50%;
 }
-.tweet-embed-media, .tweet-embed-video {
+
+.social-embed-media, .social-embed-video {
 	padding: .1em;
 	width: 100%;
-	border-radius:1em;
-	max-width:100%;
+	border-radius: .5em;
+	max-width: 100%;
 	object-fit: cover;
 }
-.tweet-embed-reply{
-	font-size:.75em;
-	display:block;
+
+.social-embed-reply {
+	font-size: .75em;
+	display: block;
 }
-.tweet-embed-meter{
-	width:100%;
-	background:#0005;
+
+.social-embed-meter {
+	width: 100%;
+	background: #0005;
 }
-.tweet-embed-card{
-	text-decoration:none !important;
-	color:unset !important;
-	border:.5px solid;
-	display:block;
-	font-size:.85em;
-	padding:.5em;
-	border-radius:1em;
+
+.social-embed-card {
+	text-decoration: none !important;
+	color: unset !important;
+	border: .5px solid;
+	display: block;
+	font-size: .85em;
+	padding: .5em;
+	border-radius: .5em;
 }
-.tweet-embed-badge{
-	height:1em;
+
+.social-embed-badge {
+	height: 1em;
 	vertical-align: text-top;
+}
+
+.social-embed-text p {
+	margin-bottom: 1em;
+}
+
+.social-embed-emoji {
+	display: inline;
+	width: 1em;
 }
 </style>
 '''
