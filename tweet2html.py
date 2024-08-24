@@ -395,7 +395,7 @@ def tweet_to_html( tweet_data ) :
 					<p class="social-embed-user-names-name"{schema_name}>{tweet_name}</p>@{tweet_user}{tweet_badge}
 				</div>
 			</a>
-			<img class="social-embed-logo" alt="" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
+			<img class="social-embed-logo" alt="Twitter" src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%0Aaria-label%3D%22Twitter%22%20role%3D%22img%22%0AviewBox%3D%220%200%20512%20512%22%3E%3Cpath%0Ad%3D%22m0%200H512V512H0%22%0Afill%3D%22%23fff%22%2F%3E%3Cpath%20fill%3D%22%231d9bf0%22%20d%3D%22m458%20140q-23%2010-45%2012%2025-15%2034-43-24%2014-50%2019a79%2079%200%2000-135%2072q-101-7-163-83a80%2080%200%200024%20106q-17%200-36-10s-3%2062%2064%2079q-19%205-36%201s15%2053%2074%2055q-50%2040-117%2033a224%20224%200%2000346-200q23-16%2040-41%22%2F%3E%3C%2Fsvg%3E'>
 		</header>
 		<section class="social-embed-text"{schema_body}>
 			{tweet_reply}
