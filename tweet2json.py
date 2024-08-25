@@ -8,20 +8,35 @@ import json
 #   Etc
 import requests
 import random
+from urllib.parse import urlparse
 
+def is_valid_url(url):
+	try:
+		result = urlparse(url)
+		return all([result.scheme, result.netloc, result.path])
+	except ValueError:
+		return False
 
 #   Command line options
 arguments = argparse.ArgumentParser(
 	prog='tweet2json',
-	description='Download the JSON representation of a Tweet')
-arguments.add_argument("id", type=int,                        help="ID of the Tweet (integer)")
+	description='Download the JSON representation of any public Tweet')
+arguments.add_argument("id", type=str,                        help="ID of the Tweet (integer)")
 arguments.add_argument("-p", "--pretty", action="store_true", help="Pretty Print the output (default false)",    required=False)
 
-
 args = arguments.parse_args()
-tweet_id = args.id
-pretty_print = True if args.pretty else False
 
+if (is_valid_url(args.id)):
+	url_parts = result = urlparse(args.id)
+	tweet_id = url_parts.path.split("/")[-1]
+else :
+	tweet_id = args.id
+
+if (tweet_id.isdecimal() is False) :
+	print( "No valid Tweet ID found." )
+	raise SystemExit
+
+pretty_print = True if args.pretty else False
 
 #   Get the data from the Twitter embed API
 for _ in range(5):
@@ -42,7 +57,7 @@ if "TweetTombstone" == data["__typename"] :
 	print( "This Post was deleted by the Post author." )
 	raise SystemExit
 
-if ( pretty_print ) :
+if (pretty_print) :
 	twitter_json = json.dumps(data, indent=3)
 else :
 	twitter_json = json.dumps(data)
