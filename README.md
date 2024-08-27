@@ -3,7 +3,7 @@
 Convert a public Tweet into either:
 
 - Image &amp; alt text
-- Semantic HTML and CSS
+- Semantic HTML and CSS, or JSON
 
 Uses Selenium's Webdriver to launch a Firefox or Chrome instance and takes a screenshot. Uses the Twitter embed API to get a copy of the text and any alt text. An HTML representation is copied to the clipboard.
 

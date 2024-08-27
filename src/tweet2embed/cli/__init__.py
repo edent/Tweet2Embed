@@ -1,5 +1,6 @@
 import base64
 import html
+import json
 import os
 from urllib.parse import urlparse
 
@@ -19,7 +20,7 @@ from tweet2embed.utils import TweetFetchingError, archive_url
 @click.option(
     "-o",
     "--output",
-    type=click.Choice(["html", "img"]),
+    type=click.Choice(["html", "img", "json"]),
     help="Format to output",
     default=["html"],
     multiple=True,
@@ -91,10 +92,15 @@ def tweet2embed_cli(
 
     for post_url_item in post_url:
         tweet_id = None
+
+        # if the parameter is a number, assume it's a tweet ID
         if post_url_item.isdigit():
             tweet_id = post_url_item
         else:
+            # otherwise assume it's an url
             url_parts = urlparse(post_url_item)
+
+            # if the url is from twitter, get the tweet id
             if url_parts.netloc in (
                 "twitter.com",
                 "www.twitter.com",
@@ -117,6 +123,9 @@ def tweet2embed_cli(
                         session=session,
                         **kwargs,
                     )
+                if "json" in output:
+                    data = get_tweet_data(tweet_id, session)
+                    data2json(data, tweet_id, **kwargs)
             else:
                 if "img" in output:
                     if not warned_about_mastodon_images:
@@ -129,8 +138,35 @@ def tweet2embed_cli(
                         session=session,
                         **kwargs,
                     )
+                if "json" in output:
+                    data = get_mastodon_data(tweet_id, session)
+                    data2json(
+                        data, "".join(x for x in post_url_item if x.isalnum()), **kwargs
+                    )
         except TweetFetchingError as e:
             click.echo(f"Error fetching Tweet: {e}")
+
+
+def data2json(
+    data, filename, pretty_print=False, copy_text=False, save_file=False, **kwargs
+):
+    #   Convert to JSON
+    tweet_json = json.dumps(data, indent=3 if pretty_print else None)
+
+    if copy_text:
+        #   Copy to clipboard
+        pyperclip.copy(tweet_json)
+        print("Copied JSON")
+
+    if save_file:
+        # Save JSON
+        #   Save directory
+        os.makedirs(save_file, exist_ok=True)
+        save_location = os.path.join(save_file, f"{filename}.json")
+        #   Save as JSON file
+        with open(save_location, "w", encoding="utf-8") as json_file:
+            json_file.write(tweet_json)
+        print(f"Saved to {save_location}")
 
 
 def mastodon2html(
@@ -165,8 +201,9 @@ def mastodon2html(
         mastodon_html = mastodon_html.replace("\n", "").replace("\t", "").strip()
 
     #   Copy to clipboard
-    pyperclip.copy(mastodon_html)
-    print(f"Copied {mastodon_url}")
+    if copy_text:
+        pyperclip.copy(mastodon_html)
+        print(f"Copied {mastodon_url}")
 
     if save_file:
         # Save HTML
