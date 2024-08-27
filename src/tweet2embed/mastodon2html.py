@@ -24,7 +24,7 @@ def mastodon_emojis(mastodon_text, emojis, session=None):
         url = emoji["url"]
         emoji_img = image_to_inline(url, session)
         emoji_img_html = (
-            f'<img src="{emoji_img}" alt=":{shortcode}:" class="mastodon-embed-emoji">'
+            f'<img src="{emoji_img}" alt=":{shortcode}:" class="social-embed-emoji">'
         )
         mastodon_text = mastodon_text.replace(f":{shortcode}:", emoji_img_html)
     return mastodon_text
@@ -34,7 +34,7 @@ def get_media(media_attachments, session=None):
     if session is None:
         session = requests.Session()
 
-    media_html = '<div class="mastodon-embed-media-grid">'
+    media_html = '<div class="social-embed-media-grid">'
     # Iterate through the attached media
     for media in media_attachments:
         media_type = media["type"]
@@ -55,19 +55,19 @@ def get_media(media_attachments, session=None):
             # Embed the poster in the <video>, link to last video which should be highest quality
             # TODO! Find a better way to get the best video
             media_html += f"""
-			<video class='mastodon-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
+			<video class='social-embed-video' controls src="{media["url"]}" poster="{media_img}" width="550"></video>
 			"""
         if "image" == media_type:
             # Embed the image
             media_html += f"""
-			<a href="{media['url']}" class="mastodon-embed-media-link"><img class="mastodon-embed-media" alt="{media_alt}" src="{media_img}"></a>
+			<a href="{media['url']}" class="social-embed-media-link"><img class="social-embed-media" alt="{media_alt}" src="{media_img}"></a>
 			"""
     return media_html + "</div>"
 
 
 def get_poll_html(poll_data):
     print("Poll…")
-    poll_html = '<hr class="mastodon-embed-hr">'
+    poll_html = '<hr class="social-embed-hr">'
 
     votes_count = poll_data["votes_count"]
 
@@ -85,7 +85,7 @@ def get_poll_html(poll_data):
         # Generate semantic HTML
         poll_html += f"""
 			<label for="poll_{option_counter}">{option_title}: ({option_votes:n})</label><br>
-			<meter class="mastodon-embed-meter" id="poll_{option_counter}" min="0" max="100" low="33" high="66" value="{option_percent}">{option_votes}</meter><br>
+			<meter class="social-embed-meter" id="poll_{option_counter}" min="0" max="100" low="33" high="66" value="{option_percent}">{option_votes}</meter><br>
 		"""
 
         option_counter += 1
@@ -133,8 +133,8 @@ def get_card_html(card_data, session=None):
             #   Convert  media to embedded WebP
             card_thumbnail = image_to_inline(card_thumbnail, session)
             card_thumbnail_html = f"""
-				<div class="mastodon-embed-media-grid">
-					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="mastodon-embed-media">
+				<div class="social-embed-media-grid">
+					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="social-embed-media">
 				</div>
 				"""
 
@@ -142,7 +142,7 @@ def get_card_html(card_data, session=None):
             card_url = card_data["url"]
 
         card_html += f"""
-			<a href="{card_url}" class="mastodon-embed-card">
+			<a href="{card_url}" class="social-embed-card">
 				{card_thumbnail_html}
 				{card_provider_html}
 				{card_title_html}
@@ -212,7 +212,7 @@ def mastodon_to_html(
     # 	else :
     # 		tweet_reply_link = f'https://twitter.com/{tweet_reply_to}/status/{tweet_reply_id}'
     # 	tweet_reply = f'''
-    # 		<small class="mastodon-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+    # 		<small class="social-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
     # 	'''
     # else :
     # 	tweet_reply = ""

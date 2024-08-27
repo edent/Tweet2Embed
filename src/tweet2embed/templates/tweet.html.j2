@@ -1,42 +1,40 @@
 {% if css_show %}
 <style>
-    {% include 'tweet.css.j2' %}
+    {% include 'socialembed.css' %}
 </style>
 {% endif %}
-<blockquote class="tweet-embed" id="tweet-embed-{{ tweet_id }}" lang="{{ tweet_lang }}" {% if schema_org %} itemscope
+<blockquote class="social-embed" id="social-embed-{{ tweet_id }}" lang="{{ tweet_lang }}" {% if schema_org %} itemscope
     itemtype="https://schema.org/SocialMediaPosting" {% endif %}>
     {{ tweet_parent }}
-    <header class="tweet-embed-header" {% if schema_org %} itemprop="author" itemscope
+    <header class="social-embed-header" {% if schema_org %} itemprop="author" itemscope
         itemtype="https://schema.org/Person" {% endif %}>
-        <a href="https://twitter.com/{{ tweet_user }}" class="tweet-embed-user" {% if schema_org %} itemprop="url"
+        <a href="https://twitter.com/{{ tweet_user }}" class="social-embed-user" {% if schema_org %} itemprop="url"
             {% endif %}>
-            <img class="tweet-embed-avatar {% if tweet_shape == 'Square' %}tweet-embed-avatar-square{% else %}tweet-embed-avatar-circle{% endif %}"
+            <img class="social-embed-avatar {% if tweet_shape == 'Square' %}social-embed-avatar-square{% else %}social-embed-avatar-circle{% endif %}"
                 src="{{ tweet_avatar }}" alt="" {% if schema_org %} itemprop="image" {% endif %}>
-            <div class="tweet-embed-user-names">
-                <p class="tweet-embed-user-names-name" {% if schema_org %} itemprop="name" {% endif %}>{{ tweet_name }}
+            <div class="social-embed-user-names">
+                <p class="social-embed-user-names-name" {% if schema_org %} itemprop="name" {% endif %}>{{ tweet_name }}
                 </p>
                 @{{ tweet_user }}{{ tweet_badge }}
             </div>
         </a>
-        <img class="tweet-embed-logo" alt=""
-            src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCmFyaWEtbGFiZWw9IlR3aXR0ZXIiIHJvbGU9ImltZyIKdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoCmQ9Im0wIDBINTEyVjUxMkgwIgpmaWxsPSIjZmZmIi8+PHBhdGggZmlsbD0iIzFkOWJmMCIgZD0ibTQ1OCAxNDBxLTIzIDEwLTQ1IDEyIDI1LTE1IDM0LTQzLTI0IDE0LTUwIDE5YTc5IDc5IDAgMDAtMTM1IDcycS0xMDEtNy0xNjMtODNhODAgODAgMCAwMDI0IDEwNnEtMTcgMC0zNi0xMHMtMyA2MiA2NCA3OXEtMTkgNS0zNiAxczE1IDUzIDc0IDU1cS01MCA0MC0xMTcgMzNhMjI0IDIyNCAwIDAwMzQ2LTIwMHEyMy0xNiA0MC00MSIvPjwvc3ZnPg=='>
+        <img class="social-embed-logo" alt="Twitter"
+            src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%0Aaria-label%3D%22Twitter%22%20role%3D%22img%22%0AviewBox%3D%220%200%20512%20512%22%3E%3Cpath%0Ad%3D%22m0%200H512V512H0%22%0Afill%3D%22%23fff%22%2F%3E%3Cpath%20fill%3D%22%231d9bf0%22%20d%3D%22m458%20140q-23%2010-45%2012%2025-15%2034-43-24%2014-50%2019a79%2079%200%2000-135%2072q-101-7-163-83a80%2080%200%200024%20106q-17%200-36-10s-3%2062%2064%2079q-19%205-36%201s15%2053%2074%2055q-50%2040-117%2033a224%20224%200%2000346-200q23-16%2040-41%22%2F%3E%3C%2Fsvg%3E'>
     </header>
-    <section class="tweet-embed-text" {% if schema_org %}itemprop="articleBody" {% endif %}>
+    <section class="social-embed-text" {% if schema_org %}itemprop="articleBody" {% endif %}>
         {{ tweet_reply }}
         {{ tweet_text }}
         {{ tweet_media }}
         {{ tweet_card }}
         {{ tweet_quote }}
     </section>
-    <hr class="tweet-embed-hr">
-    <footer class="tweet-embed-footer">
-        <a href="{{ tweet_url }}" aria-label="{{ tweet_likes }} likes" class="tweet-embed-meta">❤️
-            {{ "{:n}".format(tweet_likes) }}</a>
-        <a href="{{ tweet_url }}" aria-label="{{ tweet_replies }} replies" class="tweet-embed-meta">💬
-            {{ "{:n}".format(tweet_replies) }}</a>
-        <a href="{{ tweet_url }}" aria-label="{{ tweet_retweets }} retweets" class="tweet-embed-meta">🔁
-            {{ "{:n}".format(tweet_retweets) }}</a>
-        <a href="{{ tweet_url }}"><time datetime="{{ tweet_date }}" {% if schema_org %} itemprop="datePublished"
-                {% endif %}>{{ tweet_time }}</time></a>
+    <hr class="social-embed-hr">
+    <footer class="social-embed-footer">
+        <a href="{{ tweet_url }}">
+            <span aria-label="{{ tweet_likes }} likes" class="social-embed-meta">❤️ {{ "{:n}".format(tweet_likes) }}</span>
+            <span aria-label="{{ tweet_replies }} replies" class="social-embed-meta">💬 {{ "{:n}".format(tweet_replies) }}</span>
+            <span aria-label="{{ tweet_retweets }} reposts" class="social-embed-meta">🔁 {{ "{:n}".format(tweet_retweets) }}</span>
+            <time datetime="{tweet_date}" {% if schema_org %} itemprop="datePublished"{% endif %}>{{ tweet_time }}</time>
+        </a>
     </footer>
 </blockquote>

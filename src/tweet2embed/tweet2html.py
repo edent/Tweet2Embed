@@ -104,7 +104,7 @@ def get_media(mediaDetails, session=None):
     if session is None:
         session = requests.Session()
 
-    media_html = '<div class="tweet-embed-media-grid">'
+    media_html = '<div class="social-embed-media-grid">'
     # Iterate through the attached media
     for media in mediaDetails:
         # Convert small version of media to embedded WebP
@@ -122,12 +122,12 @@ def get_media(mediaDetails, session=None):
             # Embed the poster in the <video>, link to last video which should be highest quality
             # TODO! Find a better way to get the best video
             media_html += f"""
-            <video class='tweet-embed-video' controls src="{media["video_info"]["variants"][-1]["url"]}" poster="{media_img}" width="550"></video>
+            <video class='social-embed-video' controls src="{media["video_info"]["variants"][-1]["url"]}" poster="{media_img}" width="550"></video>
             """
         else:
             # Embed the image
             media_html += f"""
-            <a href="{media['media_url_https']}" class="tweet-embed-media-link"><img class="tweet-embed-media" alt="{media_alt}" src="{media_img}"></a>
+            <a href="{media['media_url_https']}" class="social-embed-media-link"><img class="social-embed-media" alt="{media_alt}" src="{media_img}"></a>
             """
     return media_html + "</div>"
 
@@ -189,24 +189,24 @@ def get_card_html(card_data, session=None):
         # Generate semantic HTML
         if poll_1_label != "":
             poll_html += f"""
-                <hr class="tweet-embed-hr">
+                <hr class="social-embed-hr">
                 <label for="poll_1_count">{poll_1_label}: ({poll_1_count:n})</label><br>
-                <meter class="tweet-embed-meter" id="poll_1_count" min="0" max="100" low="33" high="66" value="{poll_1_percent}">{poll_1_count}</meter><br>
+                <meter class="social-embed-meter" id="poll_1_count" min="0" max="100" low="33" high="66" value="{poll_1_percent}">{poll_1_count}</meter><br>
             """
         if poll_2_label != "":
             poll_html += f"""
                 <label for="poll_2_count">{poll_2_label}: ({poll_2_count:n})</label><br>
-                <meter class="tweet-embed-meter" id="poll_2_count" min="0" max="100" low="33" high="66" value="{poll_2_percent}">{poll_2_count}</meter><br>
+                <meter class="social-embed-meter" id="poll_2_count" min="0" max="100" low="33" high="66" value="{poll_2_percent}">{poll_2_count}</meter><br>
             """
         if poll_3_label != "":
             poll_html += f"""
                 <label for="poll_3_count">{poll_3_label}: ({poll_3_count:n})</label><br>
-                <meter class="tweet-embed-meter" id="poll_3_count" min="0" max="100" low="33" high="66" value="{poll_3_percent}">{poll_3_count}</meter><br>
+                <meter class="social-embed-meter" id="poll_3_count" min="0" max="100" low="33" high="66" value="{poll_3_percent}">{poll_3_count}</meter><br>
             """
         if poll_4_label != "":
             poll_html += f"""
                 <label for="poll_4_count">{poll_4_label}: ({poll_4_count:n})</label><br>
-                <meter class="tweet-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
+                <meter class="social-embed-meter" id="poll_4_count" min="0" max="100" low="33" high="66" value="{poll_4_percent}">{poll_4_count}</meter>
             """
         return poll_html
 
@@ -253,14 +253,14 @@ def get_card_html(card_data, session=None):
             #   Convert  media to embedded WebP
             card_thumbnail = image_to_inline(card_thumbnail, session)
             card_thumbnail_html = f"""
-                <img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="tweet-embed-media">
+                <img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="social-embed-media">
                 """
 
         if "url" in card_data:
             card_url = card_data["url"]
 
         card_html += f"""
-            <a href="{card_url}" class="tweet-embed-card">
+            <a href="{card_url}" class="social-embed-card">
                 {card_thumbnail_html}
                 {card_vanity_html}
                 {card_title_html}
@@ -317,7 +317,7 @@ def tweet_to_html(
             tweet_data["user"]["highlighted_label"]["badge"]["url"], session
         )
         print(f"Badge found '{tweet_label}'…")
-        tweet_badge = f'<br><img src="{tweet_badge_img}" alt="" class="tweet-embed-badge"> {tweet_label}'
+        tweet_badge = f'<br><img src="{tweet_badge_img}" alt="" class="social-embed-badge"> {tweet_label}'
     else:
         tweet_badge = ""
 
@@ -338,7 +338,7 @@ def tweet_to_html(
                 f"https://twitter.com/{tweet_reply_to}/status/{tweet_reply_id}"
             )
         tweet_reply = f"""
-            <small class="tweet-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
+            <small class="social-embed-reply"><a href="{tweet_reply_link}">Replying to @{tweet_reply_to}</a></small>
         """
     else:
         tweet_reply = ""
