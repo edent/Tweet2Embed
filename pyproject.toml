@@ -15,6 +15,11 @@ dependencies = [
     "jinja2>=3.1.4",
 ]
 
+[project.urls]
+Documentation = "https://github.com/edent/Tweet2Embed#readme"
+Issues = "https://github.com/edent/Tweet2Embed/issues"
+Source = "https://github.com/edent/Tweet2Embed"
+
 [project.optional-dependencies]
 img = ["selenium==4.23.1", "webdriver-manager==4.0.2"]
 
