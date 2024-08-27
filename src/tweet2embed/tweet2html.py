@@ -159,22 +159,30 @@ def get_card_html(card_data, session=None):
 
         # Get labels and counts
         if "choice1_label" in card_data["binding_values"]:
-            poll_1_label = card_data["binding_values"]["choice1_label"]["string_value"]
+            poll_1_label = html.escape(
+                card_data["binding_values"]["choice1_label"]["string_value"]
+            )
             poll_1_count = (int)(
                 card_data["binding_values"]["choice1_count"]["string_value"]
             )
         if "choice2_label" in card_data["binding_values"]:
-            poll_2_label = card_data["binding_values"]["choice2_label"]["string_value"]
+            poll_2_label = html.escape(
+                card_data["binding_values"]["choice2_label"]["string_value"]
+            )
             poll_2_count = (int)(
                 card_data["binding_values"]["choice2_count"]["string_value"]
             )
         if "choice3_label" in card_data["binding_values"]:
-            poll_3_label = card_data["binding_values"]["choice3_label"]["string_value"]
+            poll_3_label = html.escape(
+                card_data["binding_values"]["choice3_label"]["string_value"]
+            )
             poll_3_count = (int)(
                 card_data["binding_values"]["choice3_count"]["string_value"]
             )
         if "choice4_label" in card_data["binding_values"]:
-            poll_4_label = card_data["binding_values"]["choice4_label"]["string_value"]
+            poll_4_label = html.escape(
+                card_data["binding_values"]["choice4_label"]["string_value"]
+            )
             poll_4_count = (int)(
                 card_data["binding_values"]["choice4_count"]["string_value"]
             )
