@@ -1,0 +1,41 @@
+{% if css_show %}
+<style>
+    {% include 'socialembed.css' %}
+</style>
+{% endif %}
+<blockquote class="social-embed" id="social-embed-{{ mastodon_id }}" lang="{{ mastodon_language }}"
+    {% if schema_org %} itemscope itemtype="https://schema.org/SocialMediaPosting" {% endif %}>
+    <header class="social-embed-header" {% if schema_org %} itemprop="author" itemscope
+        itemtype="https://schema.org/Person" {% endif %}>
+        <a href="{{ user_url }}" class="social-embed-user" {% if schema_org %} itemprop="url" {% endif %}>
+            <img class="social-embed-avatar" src="{{ mastodon_avatar }}" alt="" {% if schema_org %}itemprop="image"
+                {% endif %}>
+            <div class="social-embed-user-names">
+                <p class="social-embed-user-names-name" {% if schema_org %} itemprop="name" {% endif %}>
+                    {{ user_name }}
+                </p>
+                @{{ user_display }}{{ user_badge }}
+            </div>
+        </a><img class="social-embed-logo" alt="Mastodon"
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-label='Mastodon' role='img' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m0 0H512V512H0'/%3E%3ClinearGradient id='a' y2='1'%3E%3Cstop offset='0' stop-color='%236364ff'/%3E%3Cstop offset='1' stop-color='%23563acc'/%3E%3C/linearGradient%3E%3Cpath fill='url(%23a)' d='M317 381q-124 28-123-39 69 15 149 2 67-13 72-80 3-101-3-116-19-49-72-58-98-10-162 0-56 10-75 58-12 31-3 147 3 32 9 53 13 46 70 69 83 23 138-9'/%3E%3Cpath d='M360 293h-36v-93q-1-26-29-23-20 3-20 34v47h-36v-47q0-31-20-34-30-3-30 28v88h-36v-91q1-51 44-60 33-5 51 21l9 15 9-15q16-26 51-21 43 9 43 60'/%3E%3C/svg%3E">
+    </header>
+    <section class="social-embed-text" {% if schema_org %}itemprop="articleBody" {% endif %}>
+        {{ mastodon_text }}
+        {{ mastodon_media }}
+        {{ mastodon_poll }}
+        {{ mastodon_card }}
+    </section>
+    <hr class="social-embed-hr">
+    <footer class="social-embed-footer">
+        <a href="{{ mastodon_url }}">
+            <span aria-label="{{ mastodon_likes }} likes" class="social-embed-meta">❤️
+                {{ "{:n}".format(mastodon_likes) }}</span>
+            <span aria-label="{{ mastodon_replies }} replies" class="social-embed-meta">💬
+                {{ "{:n}".format(mastodon_replies) }}</span>
+            <span aria-label="{{ mastodon_retweets }} reposts" class="social-embed-meta">🔁
+                {{ "{:n}".format(mastodon_retweets) }}</span>
+            <time datetime="{{ mastodon_date }}" {% if schema_org %} itemprop="datePublished"
+                {% endif %}>{{ mastodon_time }}</time>
+        </a>
+    </footer>
+</blockquote>
