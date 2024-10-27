@@ -14,10 +14,8 @@ import requests
 import pyperclip
 import base64
 import html
-import random
 
 #	Date manipulation
-from datetime import datetime
 from dateutil import parser
 
 #	Formatting
@@ -176,7 +174,7 @@ def get_card_html( card_data ) :
 		if "image_description" in card_data :
 			card_thumbnail_alt = html.escape( card_data["image_description"] )
 		
-		if "image" in card_data :
+		if "image" in card_data and card_data['image'] is not None :
 			print( "Converting card's thumbnail_image…" )
 			card_thumbnail = card_data["image"]
 			#   Convert  media to embedded WebP
@@ -304,9 +302,9 @@ def mastodon_to_html( mastodon_data ) :
 	<blockquote class="social-embed" id="social-embed-{mastodon_id}" lang="{mastodon_language}"{schema_post}>
 		<header class="social-embed-header"{schema_author}>
 			<a href="{user_url}" class="social-embed-user"{schema_url}>
-				<img class="social-embed-avatar" src="{user_avatar}" alt=""{schema_image}>
+				<img class="social-embed-avatar" src="{mastodon_avatar}" alt=""{schema_image}>
 				<div class="social-embed-user-names">
-					<p class="social-embed-user-names-name"{schema_name}>{user_name}</p>@{user_display}{user_badge}
+					<p class="social-embed-user-names-name"{schema_name}>{user_display}</p>@{user_name}{user_badge}
 				</div>
 			</a>
 			<img class="social-embed-logo" alt="Mastodon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-label='Mastodon' role='img' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m0 0H512V512H0'/%3E%3ClinearGradient id='a' y2='1'%3E%3Cstop offset='0' stop-color='%236364ff'/%3E%3Cstop offset='1' stop-color='%23563acc'/%3E%3C/linearGradient%3E%3Cpath fill='url(%23a)' d='M317 381q-124 28-123-39 69 15 149 2 67-13 72-80 3-101-3-116-19-49-72-58-98-10-162 0-56 10-75 58-12 31-3 147 3 32 9 53 13 46 70 69 83 23 138-9'/%3E%3Cpath d='M360 293h-36v-93q-1-26-29-23-20 3-20 34v47h-36v-47q0-31-20-34-30-3-30 28v88h-36v-91q1-51 44-60 33-5 51 21l9 15 9-15q16-26 51-21 43 9 43 60'/%3E%3C/svg%3E" >
