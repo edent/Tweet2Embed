@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #   For command line
 import argparse
 
@@ -179,13 +181,14 @@ def get_card_html( card_data ) :
 		if "image" in card_data :
 			print( "Converting card's thumbnail_image…" )
 			card_thumbnail = card_data["image"]
-			#   Convert  media to embedded WebP
-			card_thumbnail = image_to_inline( card_thumbnail )
-			card_thumbnail_html = f'''
-				<div class="social-embed-media-grid">
-					<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="social-embed-media">
-				</div>
-				'''
+			if card_thumbnail is not None:
+				#   Convert  media to embedded WebP
+				card_thumbnail = image_to_inline( card_thumbnail )
+				card_thumbnail_html = f'''
+					<div class="social-embed-media-grid">
+						<img src="{card_thumbnail}" alt="{card_thumbnail_alt}" class="social-embed-media">
+					</div>
+					'''
 		
 		if "url" in card_data :
 			card_url = card_data["url"]
