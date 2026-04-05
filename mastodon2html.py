@@ -16,10 +16,8 @@ import requests
 import pyperclip
 import base64
 import html
-import random
 
 #	Date manipulation
-from datetime import datetime
 from dateutil import parser
 
 #	Formatting
@@ -178,7 +176,7 @@ def get_card_html( card_data ) :
 		if "image_description" in card_data :
 			card_thumbnail_alt = html.escape( card_data["image_description"] )
 		
-		if "image" in card_data :
+		if "image" in card_data and card_data['image'] is not None :
 			print( "Converting card's thumbnail_image…" )
 			card_thumbnail = card_data["image"]
 			if card_thumbnail is not None:
@@ -308,7 +306,7 @@ def mastodon_to_html( mastodon_data ) :
 	<blockquote class="social-embed" id="social-embed-{mastodon_id}" lang="{mastodon_language}"{schema_post}>
 		<header class="social-embed-header"{schema_author}>
 			<a href="{user_url}" class="social-embed-user"{schema_url}>
-				<img class="social-embed-avatar" src="{user_avatar}" alt=""{schema_image}>
+				<img class="social-embed-avatar" src="{mastodon_avatar}" alt=""{schema_image}>
 				<div class="social-embed-user-names">
 					<p class="social-embed-user-names-name"{schema_name}>@{user_name}@{mastodon_domain}</p>{user_display}{user_badge}
 				</div>
